@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<link th:href="@{/styles/vacation.css}" rel="stylesheet" />
+
+<head th:replace="fragments/header">
+    <title th:text="#{USER.ADMIN}"></title>
+
+</head>
+<body>
+
+<!-- Account details card-->
+
+<div class="card">
+    <div class="card-header" th:text="#{VACATION.APPLY}"></div>
+    <div class="card-body">
+        <form>
+            <!-- Form Row-->
+            <div style="margin-left: auto;
+  margin-right: auto;">
+
+                <div class="col-md-6" style="margin-left: 40px">
+                    <label class="small mb-1" th:text = "#{VACATION.BEGIN}"></label>
+                    <input id="birth" class="form-control"  type="date" style="width: 350px">
+
+                </div>
+                <div class="col-md-6" style="margin-left: 40px">
+                    <label class="small mb-1" th:text = "#{VACATION.END}"></label>
+                    <input id="hired" class="form-control"  type="date" style="width: 350px" >
+
+                </div>
+                <div class="col-md-6 mt-2 mb-2">
+
+                    <input type="checkbox" name="active"> <h7 th:text = "#{VACATION.ATOWNEXPENSE}"></h7></input>
+
+                </div>
+
+            </div>
+
+
+                <!-- Form Row        -->
+
+            <!-- Save changes button-->
+            <input class="btn btn-primary" type="submit" th:value="#{VACATION.SEND}" th:href="@{/users}"/>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

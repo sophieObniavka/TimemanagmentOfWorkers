@@ -4,8 +4,10 @@ import obniavka.timemanagment.data.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,11 +17,9 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private User user;
-
     @BeforeEach
     public void initEach(){
-        user = userRepository.save(User.builder()
+        User user = userRepository.save(User.builder()
                 .id(4L)
                 .firstName("Anna")
                 .lastName("Hey")
@@ -64,7 +64,6 @@ public class UserRepositoryTest {
         user.setRole("ROLE_USER");
         user.setPostCode("12345");
         user.setPhoneNumber("0123456789");
-        user.setAbout("About user");
 
         User saveUser = userRepository.save(user);
 
@@ -82,7 +81,6 @@ public class UserRepositoryTest {
         assertNotNull(saveUser.getPhoneNumber());
         assertNotNull(saveUser.getPostCode());
         assertNotNull(saveUser.getCountry());
-        assertNotNull(saveUser.getAbout());
         assertNotNull(saveUser.getRole());
     }
 
@@ -91,14 +89,15 @@ public class UserRepositoryTest {
     void testFindUserById(){
         User user = new User();
 
-        user.setId(7L);
         user.setFirstName("John");
 
         user = userRepository.save(user);
         System.out.println(user.getId());
 
         assertNotNull(user);
-        User userRes = userRepository.findById(7L).get();
+
+        System.out.println(user.getId());
+        User userRes = userRepository.findById(user.getId()).get();
         assertNotNull(userRes);
     }
 

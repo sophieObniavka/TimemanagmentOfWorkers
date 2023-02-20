@@ -1,11 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-    <h1>Шо там як там ііііі</h1>
+<html xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/styles/user.css}" rel="stylesheet" />
+
+<head th:replace="fragments/header">
+    <title th:text="#{USER.ADMIN}"></title>
+
 </head>
 <body>
+<form th:action="@{/users}" th:object="${user}" method="post" enctype="multipart/form-data">
+    <input th:type="hidden" id="img" type="file" th:field="*{imageUrl}"/>
+<div class="container-xl px-4 mt-4">
+    <hr class="mt-0 mb-4">
+    <div class="row">
+        <div class="col-xl-4">
+            <input id="userId" type="hidden" th:field="*{id}" readonly />
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header center" th:text = "#{USER.PHOTO}" ></div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="rounded-circle" width="150" height="150" id = "profileImage" th:src="@{'data:image/**;charset=utf-8;base64,'+ ${image}}" alt="profile Image"/>
+                    <div class="form-group row">
+                        <label for="image" class="col-sm-2 col-form-label"/>
+                        <div class="col-sm-5">
+                            <input type="file" id="image" name="image" onchange="loadFile(event)" onclick="setPic()"/>
+                        </div>
+                    </div>
 
+                </div>
+                <script>
+                    var loadFile = function(event) {
+                        var image = document.getElementById('profileImage');
+                        image.src = URL.createObjectURL(event.target.files[0]);
+                    };
+
+                    var setDefault = function () {
+                        document.getElementById('profileImage').style.visibility='hidden';
+                        document.getElementById('default').style.visibility='visible';
+                    };
+
+                    var setPic = function (){
+                        document.getElementById('profileImage').style.visibility='visible';
+                        document.getElementById('default').style.visibility='hidden';
+                    }
+
+                </script>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header" th:text="#{USER.REGISTRATION}"></div>
+                <div class="card-body">
+                    <form>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6 ">
+                                <label class="small mb-1"  th:text = "#{USER.FIRSTNAME}"></label>
+                                <input id="firstName" class="form-control"  type="text" th:field="*{firstName}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.LASTNAME}"></label>
+                                <input id="lastName" class="form-control" type="text" th:field="*{lastName}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.BIRTH}"></label>
+                                <input id="birth" class="form-control"  type="date" th:field="*{birth}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.HIRED}"></label>
+                                <input id="hired" class="form-control"  type="date" th:field="*{hired}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('hired')}" th:errors="*{hired}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.PHONENUMBER}"></label>
+                                <input id="phoneNumber" class="form-control"  type="tel" th:field="*{phoneNumber}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.EMPLOYEEID}"></label>
+                                <input id="employeeId" class="form-control" type="text" th:field="*{employeeId}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}" >
+                            </div>
+
+                        </div>
+                        <label class="radio-label" th:text = "#{USER.ROLE}"></label>
+                        <div class="form-radio" id="role" style="display: -webkit-flex;.form-radio { margin-bottom: 18px;}">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="#{USER.ROLE.OPTION1}" checked th:field="*{role}">
+                                <label class="form-check-label" for="inlineRadio1" th:text="#{USER.ROLE.OPTION1}"></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" th:value="#{USER.ROLE.OPTION2}" th:field="*{role}">
+                                <label class="form-check-label" for="inlineRadio2" th:text="#{USER.ROLE.OPTION2}"></label>
+                            </div>
+
+                        </div>
+                        <p class="alert alert-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}" >
+
+                        <!-- Form Row        -->
+                        <div class="card-header mt-3" th:text="#{USER.ADDRESS}"></div>
+                        <div class="row gx-3 mb-3">
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.COUNTRY}"></label>
+                                <input class="form-control"  id="country" type="text" th:field="*{country}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('country')}" th:errors="*{country}" >
+                            </div>
+                            <!-- Form Group (location)-->
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.CITY}"></label>
+                                <input class="form-control" id="city" type="text" th:field="*{city}" >
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}" >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.STREET}"></label>
+                                <input class="form-control" id="street" type="text" th:field="*{street}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}" >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.HOUSENUMBER}"></label>
+                                <input class="form-control" id="houseNumber" type="text" th:field="*{houseNumber}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}" >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.POSTCODE}"></label>
+                                <input class="form-control" id="postCode" type="text" th:field="*{postCode}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}" >
+                            </div>
+                        </div>
+                        <!-- Form Group (email address)-->
+                        <div class="card-header mt-3" th:text="#{USER.SIGNIN.DATA}"></div>
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                            <label class="small mb-1" th:text="#{USER.EMAIL}"></label>
+                            <input class="form-control" id="email" type="email" th:field="*{email}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" >
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.PASSWORD}"></label>
+                                <input class="form-control" id="password" type="password" th:field="*{password}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" >
+                            </div>
+                        </div>
+
+                        <!-- Save changes button-->
+                        <input class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{/users}"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>>
+</form>
 </body>
 </html>
