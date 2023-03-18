@@ -12,6 +12,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface VacationMapper {
+    VacationMapper MAPPER = Mappers.getMapper(VacationMapper.class);
 
     VacationDto map(final Vacation vacation);
 

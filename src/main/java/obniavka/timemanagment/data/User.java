@@ -1,18 +1,17 @@
 package obniavka.timemanagment.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 import javax.persistence.*;
-
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+
 import java.util.Set;
 
 @AllArgsConstructor
@@ -31,9 +30,9 @@ public class User implements UserDetails {
     @Column
     private String lastName;
     @Column
-    LocalDate birth;
+    private LocalDate birth;
     @Column
-    LocalDate hired;
+    private LocalDate hired;
     @Column
     private String employeeId;
     @Column
@@ -55,11 +54,21 @@ public class User implements UserDetails {
     @Column
     private String role;
     @Column
+    private Integer vacationDays;
+    @Column
     private String password;
+
+    @Column(nullable = false)
+    private LocalDate passwordExpires;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
     private Set<Vacation> vacations = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Report> reports = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -68,26 +77,28 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
+
+
 }

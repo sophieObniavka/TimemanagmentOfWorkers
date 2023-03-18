@@ -1,7 +1,9 @@
 package obniavka.timemanagment.utils;
 
+import obniavka.timemanagment.data.Report;
 import obniavka.timemanagment.data.User;
 import obniavka.timemanagment.data.Vacation;
+import obniavka.timemanagment.domain.ReportDto;
 import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.domain.VacationDto;
 import org.mapstruct.Mapper;
@@ -24,4 +26,10 @@ public interface UserMapper {
 
     @Mapping(target = "user", ignore = true)
     Vacation map(final VacationDto vacation);
+
+    @Mapping(target = "user", ignore = true)
+    ReportDto map(final Report report);
+
+    @Mapping(target = "user", ignore = true)
+    Report map(final ReportDto report);
 }

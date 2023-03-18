@@ -3,6 +3,10 @@ package obniavka.timemanagment.controller;
 import lombok.RequiredArgsConstructor;
 import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.domain.VacationDto;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,15 +23,7 @@ import java.util.Base64;
 public class VacationController {
     private static final String VACATION = "vacation";
 
-    @GetMapping()
-    public String createVacation(final Model model) throws IOException {
 
-//        if (model.getAttribute(VACATION) == null) {
-//            model.addAttribute(VACATION, new VacationDto());
-//        }
-
-        return VACATION;
-    }
 
 //    @PostMapping
 //    public String persistUser(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {

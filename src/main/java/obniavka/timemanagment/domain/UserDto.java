@@ -4,18 +4,17 @@ import lombok.*;
 import obniavka.timemanagment.validation.DateConstraint;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
 public class UserDto {
 
     private Long id;
@@ -66,6 +65,9 @@ public class UserDto {
     private String postCode;
 
     @NotNull
+    @NotEmpty(message = "{USER.VACATIONDAYS.REQUIRED}")
+    private Integer vacationDays;
+    @NotNull
     @NotEmpty(message = "{USER.EMAIL.REQUIRED}")
     @Pattern(regexp = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", message = "{USER.EMAIL.PATERN}")
     private String email;
@@ -79,7 +81,14 @@ public class UserDto {
     @NotEmpty(message = "{USER.PASSWORD.REQUIRED}")
     private String password;
 
+    private boolean passwordExpired;
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<VacationDto> vacations = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<ReportDto> reports = new HashSet<>();
+
 }

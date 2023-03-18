@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link th:href="@{/styles/reportPopUp.css}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
+
+<head th:replace="fragments/header" th:object="${current}">
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+
+<body>
+
+<input id="monthSel" type="month"  onchange="javascript:location.href = '/admin/report/selectedDate/' + this.value;" class="mt-2 mb-2 ml-2"   >
+<table class="table table-striped mt32 customers-list" id="tableData">
+    <thead>
+    <tr>
+        <th th:text="#{REPORT.DAY}"></th>
+        <th th:text="#{REPORT.DAYOFWEEK}"></th>
+        <th th:text="#{REPORT.MONTH}"></th>
+        <th th:text="#{REPORT.BEGIN}"></th>
+        <th th:text="#{REPORT.END}"></th>
+        <th th:text="#{REPORT.PAUSE}"></th>
+        <th th:text="#{REPORT.DESCRIPTION}"></th>
+        <th th:text="#{REPORT.ACTION}"></th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="report : ${reports}">
+        <td hidden="true" th:text="${report.id}" th:id="inputId + *{report.id}" ></td>
+        <td hidden="true" th:text="${report.workDay}" th:id="inputMade + *{report.id}"></td>
+
+        <td th:text="${report.workDay.getDayOfMonth()}" ></td>
+        <td th:text="#{${report.workDay.getDayOfWeek()}}" ></td>
+        <td th:text="#{${report.workDay.getMonth()}}" ></td>
+
+
+        <td th:text="${report.begin}" th:id="inputBegi + *{report.id}"></td>
+        <td th:text="${report.end}" th:id="inputEnd + *{report.id}"></td>
+        <td th:text="${report.pause}" th:id="inputPause + *{report.id}"></td>
+
+        <td th:text="${report.description}" th:id="inputDesc + *{report.id}"></td>
+
+        <td>
+            <a  class="text-info" data-toggle="tooltip" title="" data-original-title="Edit" th:data-longDescription = "${report.id}" onclick="openModal(this.getAttribute('data-longDescription'))" ><i class="fas fa-pencil-alt"></i></a>
+            <a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{report/delete/{id}(id = ${report.id})}" th:data-longDescription = "#{REPORT.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a>
+            <div th:replace="fragments/reportPopUp :: container(${reportOnChange})">
+
+            </div>
+        </td>
+
+
+
+
+    </tr>
+    </tbody>
+</table>
+
+<div class="container" style="display: flex;
+  justify-content: center;">
+
+<button class="button-34" role="button" th:text="#{REPORT.NEW}" onclick="openModalToSaveNewReport()"></button>
+    <div th:replace="fragments/reportPopUp :: container(${reportNew})"></div>
+
+</div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import obniavka.timemanagment.utils.VacationMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class VacationService {
     }
 
     public VacationDto persistVacationInDB(final VacationDto vacationDto){
+        vacationDto.setCreated(LocalDateTime.now());
         Vacation vacation = vacationRepository.save(vacationMapper.map(vacationDto));
         return vacationMapper.map(vacation);
     }

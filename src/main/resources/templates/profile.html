@@ -3,12 +3,13 @@
 
 <link th:href="@{/styles/profile.css}" rel="stylesheet" />
 
-<head th:replace="fragments/header" class="mt-0">
+<form >
+    <head th:replace="fragments/header">
     <title th:text="#{USER.USERS}"></title>
 
 </head>
 
-<body style=" background:#d0bdf4;">
+<body style=" background:#632673;">
 <form th:action="@{/users}" th:object="${user}" method="get" enctype="multipart/form-data">
     <input th:type="hidden" id="img" type="file" th:field="*{imageUrl}"/>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -60,7 +61,7 @@
             <div class="main-box clearfix" style="background-color: #e5eaf5; box-shadow: 0 15px 60px rgba(0, 0, 0, 0.5);">
                 <div class="profile-header">
 
-                    <a th:href="@{/users/{id}(id = *{id})}" class="btn btn-primary edit-profile" style="background-color: #a0d2eb">
+                    <a th:href="@{/admin/users/{id}(id = *{id})}" class="btn btn-primary edit-profile" style="background-color: #a0d2eb">
                         <i class="fa fa-pencil-square fa-lg" th:text="#{USER.EDIT}"></i>
                     </a>
                 </div>
@@ -227,4 +228,5 @@
 </form>
 
 </body>
+</form>
 </html>

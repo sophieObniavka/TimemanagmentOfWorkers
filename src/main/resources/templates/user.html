@@ -1,14 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <link th:href="@{/styles/user.css}" rel="stylesheet" />
+<script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
 
-<head th:replace="fragments/header">
+    <head th:replace="fragments/header">
     <title th:text="#{USER.ADMIN}"></title>
 
 </head>
+
+
+
 <body>
-<form th:action="@{/users}" th:object="${user}" method="post" enctype="multipart/form-data">
+
+<form th:action="@{/admin/users}" th:object="${user}" method="post" enctype="multipart/form-data">
     <input th:type="hidden" id="img" type="file" th:field="*{imageUrl}"/>
+    <input th:type="hidden" th:field="*{reports}">
+    <script th:inline="javascript">function verifyPassword(errorMessage) {
+        var pw = document.getElementById("passwordNew").value;
+        var pR = document.getElementById("passwordRepeat").value;
+
+        //check empty password field
+        if(pw !== pR) {
+            document.getElementById("message").innerHTML = errorMessage;
+            return false;
+        }
+
+//     //minimum password length validation
+//     if(pw.length < 8) {
+//         document.getElementById("message").innerHTML = "**Password length must be atleast 8 characters";
+//         return false;
+//     }
+//
+// //maximum length of password validation
+//     if(pw.length > 15) {
+//         document.getElementById("message").innerHTML = "**Password length must not exceed 15 characters";
+//         return false;
+        else {
+           document.getElementById("saveButton").setAttribute('type', 'submit');
+
+
+        }
+    }  </script>
 <div class="container-xl px-4 mt-4">
     <hr class="mt-0 mb-4">
     <div class="row">
@@ -88,15 +121,21 @@
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}" >
                             </div>
 
+<!--                            <div class="col-md-6">-->
+<!--                                <label class="small mb-1" th:text = "#{USER.VACATIONS.AMOUNT}"></label>-->
+<!--                                <input id="amountVacation" class="form-control" type="text" th:field="*{employeeId}">-->
+<!--                                <p class="alert alert-danger" th:if="${#fields.hasErrors('amountVacation')}" th:errors="*{vacationDays}" >-->
+<!--                            </div>-->
+
                         </div>
                         <label class="radio-label" th:text = "#{USER.ROLE}"></label>
                         <div class="form-radio" id="role" style="display: -webkit-flex;.form-radio { margin-bottom: 18px;}">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="#{USER.ROLE.OPTION1}" checked th:field="*{role}">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="USER" checked th:field="*{role}">
                                 <label class="form-check-label" for="inlineRadio1" th:text="#{USER.ROLE.OPTION1}"></label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" th:value="#{USER.ROLE.OPTION2}" th:field="*{role}">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" th:value="ADMIN" th:field="*{role}">
                                 <label class="form-check-label" for="inlineRadio2" th:text="#{USER.ROLE.OPTION2}"></label>
                             </div>
 
@@ -147,21 +186,149 @@
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" >
                             </div>
 
+                            <tr th:if="*{id==null}">
                             <div class="col-md-6">
                                 <label class="small mb-1" th:text="#{USER.PASSWORD}"></label>
-                                <input class="form-control" id="password" type="password" th:field="*{password}">
+                                <input class="form-control" id="password" type="password" th:field="*{password}" autocomplete="off">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" >
                             </div>
-                        </div>
+                            </tr>
+                            <tr th:if="*{id!=null}" class="mt-2">
+                                    <div class="col-md-6 box">
+                                        <a class="button" href="#popup1" th:text="#{USER.CHANGEPASSWORD}"></a>
+                                    </div>
 
+
+                                <form>
+                                    <div id="popup1" class="overlay">
+                                        <div class="popup">
+                                            <a class="close" href="#">&times;</a>
+                                            <div class="content">
+
+                                                    <!-- Enter Password -->
+                                                <div class="card-header" th:text="#{USER.CHANGEPASSWORD}"></div>
+                                                <div class="col-md-6 mt-4">
+                                                    <ul  class="list-unstyled" style="width: 200px">
+                                                        <li><input type="password" id="passwordNew" class="fadeIn second" th:placeholder="#{USER.PASSWORD}" ></li>
+                                                        <li><input type="password" id="passwordRepeat" class="fadeIn third" th:field="*{password}"  th:placeholder="#{USER.REPEAT.PASSWORD}">
+                                                            <span id = "message" style="color:red"> </span> <br><br>
+                                                        </li>
+                                                        <li><div>
+                                                            <input type="button" id="saveButton" th:value="#{USER.CONFIRM}" th:data-longDescription = "#{ALERT.DONOTMATCH}" onclick="return verifyPassword(this.getAttribute('data-longDescription'))">
+                                                        </div>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                </form>
+                            </tr>
+                        </div>
                         <!-- Save changes button-->
-                        <input class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{/users}"/>
+                        <input  class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{/admin/users}"/>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>>
+
+
+    <style>
+
+
+
+    .box {
+        width: 40%;
+        margin: 0 auto;
+        background: rgba(255,255,255,0.2);
+        justify-content: center;
+        padding: 35px;
+        border: 2px solid #fff;
+        border-radius: 20px/50px;
+        background-clip: padding-box;
+        text-align: center;
+    }
+.content{
+    justify-content: center;
+}
+    .button {
+        background-color: #4CAF50; /* Green */
+        margin-top: 0px;
+        width: 200px;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .button:hover {
+        background: #06D85F;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        transition: opacity 500ms;
+        visibility: hidden;
+        opacity: 0;
+    }
+    .overlay:target {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .popup {
+        margin: 70px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        width: 350px;
+        position: relative;
+        transition: all 5s ease-in-out;
+    }
+
+    .popup h2 {
+        margin-top: 0;
+        color: #333;
+        font-family: Tahoma, Arial, sans-serif;
+    }
+    .popup .close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        transition: all 200ms;
+        font-size: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .popup .content {
+        max-height: 30%;
+        overflow: auto;
+    }
+
+    @media screen and (max-width: 700px){
+        .box{
+            width: 70%;
+        }
+        .popup{
+            width: 70%;
+        }
+    }</style>
 </form>
 </body>
+
+
 </html>

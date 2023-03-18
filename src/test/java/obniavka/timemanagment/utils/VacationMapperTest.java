@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +37,7 @@ public class VacationMapperTest {
         vacationDto.setConfirmed(false);
         vacationDto.setUser(userDto);
         vacationDto.setAtOwnExpense(false);
+        vacationDto.setCreated(LocalDateTime.now());
         Vacation vacation = vacationMapper.map(vacationDto);
 
         assertNotNull(vacation);

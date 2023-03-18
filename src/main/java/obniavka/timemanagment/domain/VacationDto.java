@@ -8,11 +8,14 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
 public class VacationDto {
 
     private Long id;
@@ -25,11 +28,14 @@ public class VacationDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate end;
 
+    private LocalDateTime created;
+
+    @NotNull
     private Boolean archived;
-
+    @NotNull
     private Boolean confirmed;
-
+    @NotNull
     private Boolean atOwnExpense;
-
+    @NotNull
     private UserDto user;
 }

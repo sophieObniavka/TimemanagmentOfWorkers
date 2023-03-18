@@ -1,37 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <link th:href="@{/styles/login.css}" rel="stylesheet" />
-
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="ISO-8859-1">
+    <title>Registration and Login App</title>
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>
-            <div class="div-3">
+            <form th:action="@{/login}" method="post">
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger">Invalid username or
+                        password.</div>
+                </div>
+                <div class="container">
+                    <header>
+                        <h1>
+                            <div class="div-3">
 
-            </div>
-        </h1>
-    </header>
-    <h1 class="text-center" th:text="#{LOGIN}"></h1>
-    <form class="registration-form" action="#" th:action="@{/doLogin}" method="post">
-        <label>
-            <span class="label-text" th:text="#{USER.EMAIL}"></span>
-            <input type="text" name="email">
-        </label>
-        <label class="password">
-            <span class="label-text" th:text="#{USER.PASSWORD}"></span>
-            <button class="toggle-visibility" title="toggle password visibility" tabindex="-1">
-                <span class="glyphicon glyphicon-eye-close"></span>
-            </button>
-            <input type="password" name="password">
-        </label>
-        <div class="text-center">
-            <button class="submit" name="register" th:text="#{LOGIN.BUTTON}"></button>
+                            </div>
+                        </h1>
+                    </header>
+                    <h1 class="text-center" th:text="#{LOGIN}"></h1>
+                    <form class="registration-form" action="#" th:action="@{/login}" method="post">
+                        <label>
+                            <span class="label-text" th:text="#{USER.EMAIL}"></span>
+                            <input type="text" class = "form-control" id ="username" name = "username">
+                        </label>
+                        <label class="password">
+                            <span class="label-text" th:text="#{USER.PASSWORD}"></span>
+
+                            <input type="password" name="password" id="password" class="form-control">
+                        </label>
+                        <div class="text-center">
+                            <button class="submit" name="login-submit" id="login-submit"  value="Log In"  th:text="#{LOGIN.BUTTON}"></button>
+                        </div>
+                    </form>
+                </div>
+            </form>
+
         </div>
-    </form>
+    </div>
 </div>
 </body>
 </html>

@@ -1,41 +1,40 @@
 package obniavka.timemanagment.data;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Objects;
 
 @AllArgsConstructor
-@Data
 @Entity
+@Data
 @Builder(toBuilder = true)
+@EqualsAndHashCode(exclude="user")
 @NoArgsConstructor
-public class Vacation {
+public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "vacation_id", unique = true, nullable = false)
+    @Column(name = "report_id", unique = true, nullable = false)
     private Long id;
 
     @Column
-    private LocalDate begin;
+    private LocalTime begin;
 
     @Column
-    private LocalDate end;
+    private  LocalTime end;
 
     @Column
-    private Boolean archived;
+    private  LocalTime pause;
 
     @Column
-    private Boolean confirmed;
+    private LocalDate workDay;
 
     @Column
-    private LocalDateTime created;
-
-    @Column
-    private Boolean atOwnExpense;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
