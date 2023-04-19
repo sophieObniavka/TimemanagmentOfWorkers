@@ -3,7 +3,6 @@ package obniavka.timemanagment.data;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -26,19 +25,25 @@ public class Vacation {
     private LocalDate end;
 
     @Column
-    private Boolean archived;
-
-    @Column
     private Boolean confirmed;
 
     @Column
     private LocalDateTime created;
 
     @Column
-    private Boolean atOwnExpense;
+    private boolean atOwnExpense;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
+
+    private String checkedByUser;
+
+    @Column
+    private String comment;
+
+
 
 }

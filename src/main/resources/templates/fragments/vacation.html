@@ -1,58 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<link th:href="@{/styles/vacation.css}" rel="stylesheet" />
-<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
-
-<head th:replace="fragments/header">
-    <title th:text="#{USER.ADMIN}"></title>
-
-</head>
-<body>
-
-<!-- Account details card-->
-
 <div id="vacationModal" class="modal" tabindex="-1" th:fragment="container(vacation)">
 
-    <div class="modal-dialog" style="top: 200px">
+    <div class="modal-dialog" style="top: 100px">
 
         <!-- Modal content-->
         <div class="modal-content" style="width: 285px">
             <div class="modal-header" style="background-color: black">
-                <h4 class="modal-title" style="color: white" th:text="#{VACATION.APPLY}"></h4>
-                <span class="close" th:onclick="close()">&times;</span>
+                <h4 class="modal-title" style="color: white" th:text="#{USER.VACATION}"></h4>
+                <span class="close" th:onclick="'closeVacationModal()'">&times;</span>
             </div>
             <div class="modal-body">
+                <form id="inputVacationForm" th:action="action" class="mr-0" method="post" th:object="${vacation}" style="justify-content: center">
+                    <span class="badge badge-info" style="width: 100%" th:field="${left}" id="left" th:text="#{VACATION.DAYS.LEFT} + ': '+ ${left}"></span>
+                    <div class="col-md-6" style="width: 100%">
+                        <ul  class="list-unstyled" style="width: 100%" >
 
-                <form id="inputVacationForm" th:action="@{/admin/vacation}" class="mr-0" method="post" th:object="${vacation}" style="justify-content: center">
-                    <div class="info" style="background-color: #e7f3fe;
-  border-left: 6px solid #2196F3;"><h7 th:text="#{VACATION.DAYS.LEFT} + ' ' + ${current.vacationDays}"></h7></div>
-                    <div class="col-md-6">
-                        <ul  class="list-unstyled" >
+                            <input class="mr-20" id="sId" th:name="id" th:field="*{id}" hidden="true" readonly>
 
-                            <input class="mr-20" id="setId" th:name="IdName" th:field="*{id}" hidden="true" readonly>
-
-                            <li style="height: 60px" class="mt-1" >
-                                <label class=" mb-0" th:text="#{VACATION.BEGIN}"></label>
-                                <input  id="begin" type="date" th:name="begin" th:field="*{begin}" style="width: 203px" required>
+                            <li style="height: 60px">
+                                <label class="mb-0" th:text="#{VACATION.BEGIN}" ></label>
+                                <input class="mr-20" type="date" id="vacationBegin" th:name="name" th:field="*{begin}" style="width: 203px" required>
 
                             </li>
-
                             <li style="height: 60px" class="mt-1" >
                                 <label class=" mb-0" th:text="#{VACATION.END}"></label>
-                                <input  id="begin" type="date" th:name="begin" th:field="*{end}" style="width: 203px" required>
+                                <input  class="ml-20" id="vacationEnd" type="date" th:name="end" th:field="*{end}" style="width: 203px" required>
 
                             </li>
-                            <li class="mt-1" style="width: 200px">
-
-                                <input type="checkbox" name="active" th:field="*{atOwnExpense}"> <h7 th:text = "#{VACATION.ATOWNEXPENSE}" style="width: 200px"></h7></input>
-
+                            <li style="height: 60px" class="mt-1 ml-5px" >
+                                <div class="row" style="width: 203px">
+                                    <div class="flex-column" >
+                                        <input class="ml-2"  type="checkbox"  id="atOwn" th:field="*{atOwnExpense}" >
+                                    </div>
+                                    <div class="flex-column">
+                                        <label class=" mb-0" th:text="#{VACATION.ATOWNEXPENSE}"></label>
+                                    </div>
+                                </div>
                             </li>
+
+                                <span id = "badDateVacation" style="color:red; width: 203px"> </span> <br><br>
+
+
+                            <button  id="saveButton"  style="width: 200px; height: 50px; background-color: black; color: white; justify-content: center" th:data-longDescription = "#{BADDATE}" th:data-description = "#{DAYS.LIMIT}" onclick="return checkDates(this.getAttribute('data-longDescription'), this.getAttribute('data-description'),'vacationBegin','vacationEnd','atOwn','badDateVacation','left')"><h3 th:text="#{REPORT.SAVE}"></h3></button>
+
                         </ul>
-
-                        <button  id="saveVacation" type="submit"  style="width: 200px; height: 50px; background-color: black; color: white;" th:href="@{/admin/vacation}" ><h3 th:text="#{REPORT.SAVE}"></h3></button>
-
-
                     </div>
+
+
+
 
                 </form>
             </div>
@@ -60,6 +54,3 @@
 
     </div>
 </div>
-
-</body>
-</html>

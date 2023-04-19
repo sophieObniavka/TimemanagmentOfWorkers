@@ -2,7 +2,7 @@ function openModal(getId) {
     let id =document.getElementById("inputId" + getId).innerText;
 
     console.log("This is Id: " + id);
-    document.getElementById("inputForm").setAttribute("action", "/admin/report/edit")
+    document.getElementById("inputForm").setAttribute("action", "/report/edit")
     document.getElementById("myModal").style.display = "block";
     document.getElementById("description").value = document.getElementById("inputDesc" + getId).innerText;
     document.getElementById("begi").value = document.getElementById("inputBegi" + getId).innerText;
@@ -36,14 +36,33 @@ function closeModal() {
 }
 
 function openModalToSaveNewReport(){
-    document.getElementById("inputForm").setAttribute("action", "/admin/report")
+    document.getElementById("inputForm").setAttribute("action", "/report")
     document.getElementById("myModal").style.display = "block";
 }
 
 function openModalToSaveVacation(){
+    document.getElementById("inputVacationForm").setAttribute("action", "/vacations")
     document.getElementById("vacationModal").style.display = "block";
 }
 
-function close(){
+function closeVacationModal(){
+    document.getElementById('vacationBegin').value = null;
+    document.getElementById('vacationEnd').value = null;
+    document.getElementById('atOwn').value = null;
+    document.getElementById('badDateVacation').innerHTML  = null;
     document.getElementById("vacationModal").style.display = "none";
+}
+
+
+function openModalToSaveSickLeave(){
+    document.getElementById("inputSickleaveForm").setAttribute("action", "/sickleaves")
+    document.getElementById("sickLeaveModal").style.display = "block";
+}
+function closeSickLeaveModal(){
+    document.getElementById('sickleaveBegin').value = null;
+    document.getElementById('sickleaveEnd').value = null;
+    document.getElementById('sickLeaveAtOwn').value = null;
+    document.getElementById('sickleaveDescription').value = null;
+    document.getElementById('badDate').innerHTML  = null;
+    document.getElementById("sickLeaveModal").style.display = "none";
 }

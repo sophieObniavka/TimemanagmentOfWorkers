@@ -1,94 +1,71 @@
 package obniavka.timemanagment.security;
 
-import obniavka.timemanagment.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.time.Duration;
 
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    private UserService userService;
+public class SecurityConfiguration {
+    private static final String LOGIN = "/login";
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .build();
+    }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService);
-        auth.setPasswordEncoder(passwordEncoder());
-        return auth;
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+
+        return daoAuthenticationProvider;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers(
-                        "/admin**").permitAll()
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, UserDetailsService userDetailsService) throws Exception {
+        http
+                .authorizeRequests()
                 .antMatchers("/image/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/styles/**").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/login/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
-                .formLogin(formLogin -> {
-                    try {
-                        formLogin
-                                .successHandler(successHandler())
-                                .loginPage("/login")
-                                .permitAll()
-                                .and()
-                                .logout()
-                                .invalidateHttpSession(true)
-                                .clearAuthentication(true)
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/login?logout")
-                                .permitAll();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
-    }
-
-    @Bean
-    public CustomAuthenticationSuccessHandler successHandler() {
-        return new CustomAuthenticationSuccessHandler();
-    }
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/styles/**", "/js/**", "/image/**","/vendor/**","/fonts/**");
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService)
+                .formLogin()
+                .loginPage(LOGIN).permitAll()//**for custom login page
+                .loginProcessingUrl("/doLogin") //the url to submit username and password
+                .failureForwardUrl("/login/failure")
+                .successHandler(customAuthenticationSuccessHandler)
                 .and()
-                .eraseCredentials(false);
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl(LOGIN)
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
+                .and()
+                .rememberMe().userDetailsService(userDetailsService)
+                .key("uniqueAndSecret")
+                ;
+
+        return http.build();
     }
 
 }
+

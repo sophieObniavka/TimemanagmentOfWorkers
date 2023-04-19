@@ -1,15 +1,9 @@
 package obniavka.timemanagment.data;
 
 import lombok.*;
-import org.hibernate.Hibernate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.HashSet;
 
 import java.util.Set;
@@ -19,7 +13,7 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
@@ -56,6 +50,10 @@ public class User implements UserDetails {
     @Column
     private Integer vacationDays;
     @Column
+    private Integer sickleaveDays;
+    @Column
+    private Integer salaryPerHour;
+    @Column
     private String password;
 
     @Column(nullable = false)
@@ -70,35 +68,10 @@ public class User implements UserDetails {
     @ToString.Exclude
     private Set<Report> reports = new HashSet<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<SickLeave> sickLeaves = new HashSet<>();
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
 
 }

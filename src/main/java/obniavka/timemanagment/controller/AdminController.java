@@ -1,27 +1,17 @@
 package obniavka.timemanagment.controller;
 
 import lombok.RequiredArgsConstructor;
-import obniavka.timemanagment.data.Report;
-import obniavka.timemanagment.data.User;
-import obniavka.timemanagment.domain.ReportDto;
+import obniavka.timemanagment.domain.SickLeaveDto;
 import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.domain.VacationDto;
-import obniavka.timemanagment.services.ReportService;
+import obniavka.timemanagment.helper.AmountOfDays;
+import obniavka.timemanagment.services.SickLeavesService;
 import obniavka.timemanagment.services.UserService;
 import obniavka.timemanagment.services.VacationService;
-import obniavka.timemanagment.utils.ReportMapper;
-import obniavka.timemanagment.utils.UserMapper;
 import org.aspectj.util.FileUtil;
-import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,80 +21,54 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.security.Principal;
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     private static final String USERS = "users";
     private static final String USER = "user";
-    private static final String CURRENT = "current";
     private static final String IMAGE = "image";
-    private static final String REPORT = "report";
-    private static final String VACATION = "vacation";
+
+    private static final String VACATIONS = "vacations";
+    private static final String SICKLEAVES = "sickleaves";
+    private static final String PAGE = "page";
 
     private final UserService userService;
-    private final ReportService reportService;
     private final VacationService vacationService;
+    private final SickLeavesService sickLeavesService;
 
-
-    UserMapper mapper = Mappers.getMapper(UserMapper.class);
-
-    private User authentificatedUser(Model model){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = null;
-        if ((!(auth instanceof AnonymousAuthenticationToken)) && auth != null) {
-            UserDetails userDetail = (UserDetails) auth.getPrincipal();
-            user = userService.findUserByEmail(userDetail.getUsername());
-            model.addAttribute(CURRENT, user);
-            model.addAttribute(VACATION, new VacationDto());
-        }
-
-        return user;
-    }
-
+    AmountOfDays amountOfDays = new AmountOfDays();
 
     @GetMapping("/homeAdmin")
-    public String homeAdmin(Model model) {
-        authentificatedUser(model);
+    public String homeAdmin(Model model,@RequestParam("page") Optional<Integer> page){
+        int currentPage = page.orElse(1);
+        model.addAttribute(VACATIONS,vacationService.selectAllUnconfirmedVacations(PageRequest.of(currentPage-1, 8)));
         return "homeAdmin";
     }
 
+    @GetMapping("/bad")
+    public String admin(Principal principal)
+    {
+        return "bad";
+    }
 
     @GetMapping("/users")
-    public String usersAll(final Model model) throws IOException {
-        authentificatedUser(model);
+    public String usersAll(final Model model){
         model.addAttribute("usersList", userService.fetchAllUsersFromDb().size());
         model.addAttribute("usersSize", userService.fetchAllUsersFromDb().isEmpty());
 
-        Map<UserDto, String> users = new HashMap<>();
-        for (UserDto user : userService.fetchAllUsersFromDb()) {
-
-            if (user.getImageUrl() == null || user.getImageUrl().length == 0) {
-                users.put(user, Base64.getEncoder().encodeToString(setDefaultImage()));
-            } else {
-                users.put(user, Base64.getEncoder().encodeToString(user.getImageUrl()));
-            }
-
-        }
-
-        if (model.getAttribute(USERS) == null) {
-            model.addAttribute(USERS, users);
-        }
-
+        model.addAttribute(USERS, userService.fetchAllUsersFromDb());
 
         return USERS;
     }
 
     @GetMapping("/users/{id}")
     public String user(final Model model, final @PathVariable("id") String id) throws IOException {
-        System.out.println(userService.findUserById(Long.parseLong(id)).getPassword());
-
-        authentificatedUser(model);
-
         if (id == null && model.getAttribute(USER) == null) {
             model.addAttribute(USER, new UserDto());
             model.addAttribute(IMAGE, Base64.getEncoder().encodeToString(setDefaultImage()));
@@ -120,9 +84,6 @@ public class AdminController {
 
     @GetMapping("/users/profile/{id}")
     public String profileOfUser(final Model model, final @PathVariable("id") String id) throws IOException {
-
-        authentificatedUser(model);
-
         if (id == null && model.getAttribute(USER) == null) {
             model.addAttribute(USER, new UserDto());
             model.addAttribute(IMAGE, Base64.getEncoder().encodeToString(setDefaultImage()));
@@ -136,7 +97,6 @@ public class AdminController {
 
     @GetMapping("/users/create")
     public String createUser(final Model model) throws IOException {
-        authentificatedUser(model);
         model.addAttribute(IMAGE, Base64.getEncoder().encodeToString(setDefaultImage()));
 
         if (model.getAttribute(USER) == null) {
@@ -148,27 +108,9 @@ public class AdminController {
 
     @PostMapping("/users")
     public String persistUser(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-        authentificatedUser(model);
-
         if (userService.findUserById(user.getId()) != null) {
-            if (user.getPassword() == null || user.getPassword().length() == 0) {
-                userService.updateUser(user.getId(),
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getBirth(),
-                        user.getHired(),
-                        user.getPhoneNumber(),
-                        user.getEmployeeId(),
-                        user.getRole(),
-                        user.getCountry(),
-                        user.getCity(),
-                        user.getStreet(),
-                        user.getHouseNumber(),
-                        user.getPostCode(),
-                        user.getEmail(),
-                        user.getImageUrl()
-
-                );
+            if (user.getPassword().length() == 0) {
+                userService.updateUser(user);
             } else {
                 if (bindingResult.hasErrors()) {
                     if (multipartFile.isEmpty()) {
@@ -208,12 +150,6 @@ public class AdminController {
 
     @GetMapping("/users/delete/{id}")
     public String removeUser(final @PathVariable("id") String id, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if ((!(auth instanceof AnonymousAuthenticationToken)) && auth != null) {
-            UserDetails userDetail = (UserDetails) auth.getPrincipal();
-            model.addAttribute(CURRENT, userService.findUserByEmail(userDetail.getUsername()));
-        }
-
         userService.dropUserFromDb(Long.parseLong(id));
 
         return "redirect:/admin/" + USERS;
@@ -228,100 +164,175 @@ public class AdminController {
         return "profile";
     }
 
-    @GetMapping("/report")
-    public String report(final Model model) {
 
-        User user = authentificatedUser(model);
-            model.addAttribute("reports", user.getReports());
-            model.addAttribute("reportNew", new ReportDto());
-            model.addAttribute("reportOnChange", new ReportDto());
+    @PostMapping("/vacation/{id}")
+    public String confirmVacation( @PathVariable("id") String id){
+        VacationDto vacation = vacationService.findVacationById(Long.parseLong(id));
+        UserDto user = vacation.getUser();
 
+        if(!vacation.isAtOwnExpense()) {
+            user.setVacationDays(user.getVacationDays() - amountOfDays.getWorkingDaysBetweenTwoDates(vacation.getBegin(), vacation.getEnd()));
+        }
 
-        return "report";
-    }
+        vacation.setConfirmed(true);
+        vacation.setCheckedByUser(user.getFirstName() + " " + user.getLastName() );
 
-    @GetMapping("/report/selectedDate/{month}")
-    public String pageM(final Model model, @PathVariable("month") String month) {
-
-        User user = authentificatedUser(model);
-
-            model.addAttribute("reportOnChange", new ReportDto());
-            model.addAttribute("someBean", month);
-            model.addAttribute("reports", user.getReports().stream().filter(x -> x.getWorkDay().getMonthValue() == Integer.parseInt(month.substring(5)) && x.getWorkDay().getYear() == Integer.parseInt(month.substring(0, 4))).toList());
-            model.addAttribute("reportNew", new ReportDto());
-
-
-        return REPORT;
-    }
-
-
-    @PostMapping("/report")
-    public String persistReport(@Valid @ModelAttribute("report") ReportDto report, Model model) {
-        User user =  authentificatedUser(model);
-
-        report.setUser(mapper.map(user));
-        reportService.persistReportInDb(report);
-
-        model.addAttribute("reportOnChange", new ReportDto());
-        model.addAttribute("reports", user.getReports());
-        model.addAttribute("reportNew", new ReportDto());
-
-        return "redirect:/admin/" + REPORT;
-    }
-
-    @PostMapping("/report/edit")
-    public String popUpSave(final Model model, @ModelAttribute("reportOnChange") ReportDto report) {
-        User user = authentificatedUser(model);
-        System.out.println("Found: " + report.getBegin());
-            ReportDto found = reportService.findReportById(report.getId());
-
-            found.setWorkDay(report.getWorkDay());
-            found.setBegin(report.getBegin());
-            found.setEnd(report.getEnd());
-            found.setPause(report.getPause());
-            found.setUser(mapper.map(user));
-            found.setDescription(report.getDescription());
-
-            reportService.persistReportInDb(found);
-
-        return "redirect:/admin/report";
-    }
-
-    @GetMapping("/report/delete/{id}")
-    public String removeReport(final @PathVariable("id") String id, Model model) {
-        authentificatedUser(model);
-
-        reportService.dropReportFromDb(Long.parseLong(id));
-
-        return "redirect:/admin/" + REPORT;
-    }
-
-
-    @PostMapping("/vacation")
-    public String createVacation(@Valid @ModelAttribute("vacation") VacationDto vacation, Model model) throws IOException {
-        User user = authentificatedUser(model);
-
-        System.out.println(vacation);
-        user.setVacationDays(user.getVacationDays() - getWorkingDaysBetweenTwoDates(vacation.getBegin(), vacation.getEnd()));
-
-        vacation.setUser(mapper.map(user));
-        userService.persistUserInDb(mapper.map(user));
+        userService.updateUser(user);
         vacationService.persistVacationInDB(vacation);
 
 
-        return"redirect:/admin/homeAdmin";
+        return"redirect:/admin/vacations/active";
     }
 
-    private int getWorkingDaysBetweenTwoDates(LocalDate startDate, LocalDate endDate) {
-        int businessDays = 0;
-        LocalDate d = startDate;
-        while (d.isBefore(endDate)) {
-            DayOfWeek dw = d.getDayOfWeek();
-            if (dw != DayOfWeek.SATURDAY && dw != DayOfWeek.SUNDAY) {
-                businessDays++;
-            }
-            d = d.plusDays(1);
+    @PostMapping("/sickleave/{id}")
+    public String confirmSickleave( @PathVariable("id") String id){
+        SickLeaveDto sickLeave = sickLeavesService.findSickLeaveById(Long.parseLong(id));
+        UserDto user = sickLeave.getUser();
+        if(!sickLeave.isAtOwnExpense()) {
+            user.setVacationDays(user.getVacationDays() - amountOfDays.getWorkingDaysBetweenTwoDates(sickLeave.getBegin(), sickLeave.getEnd()));
         }
-        return businessDays;
+
+        sickLeave.setConfirmed(true);
+        sickLeave.setCheckedByUser(user.getFirstName() + " " + user.getLastName() );
+
+        userService.updateUser(user);
+        sickLeavesService.persistSickLeaveInDB(sickLeave);
+
+
+        return"redirect:/admin/sickleaves/active";
+    }
+
+
+    @PostMapping("/vacation/reject/{id}")
+    public String rejectVacation( @ModelAttribute("comment") String comment, @PathVariable("id") String id,  @ModelAttribute("current") UserDto user) {
+
+        VacationDto vacation = vacationService.findVacationById(Long.parseLong(id));
+
+        vacation.setConfirmed(false);
+        vacation.setComment(comment);
+        vacation.setCheckedByUser(user.getFirstName() + " " + user.getLastName() );
+
+        vacationService.persistVacationInDB(vacation);
+
+
+        return"redirect:/admin/vacations/active";
+    }
+
+    @PostMapping("/sickleave/reject/{id}")
+    public String rejectSickLeave( @ModelAttribute("comment") String comment, @PathVariable("id") String id,  @ModelAttribute("current") UserDto user) {
+
+        SickLeaveDto sickLeave = sickLeavesService.findSickLeaveById(Long.parseLong(id));
+
+        sickLeave.setConfirmed(false);
+        sickLeave.setComment(comment);
+        sickLeave.setCheckedByUser(user.getFirstName() + " " + user.getLastName() );
+
+        sickLeavesService.persistSickLeaveInDB(sickLeave);
+
+
+        return"redirect:/admin/sickleaves/active";
+    }
+
+    @GetMapping("/vacations/active")
+    public String getActiveVacations(Model model, @RequestParam("page") Optional<Integer> page){
+        int currentPage = page.orElse(1);
+
+
+        model.addAttribute("colorActive", "#632673");
+        model.addAttribute("colorClosed", "black");
+
+        Page<VacationDto> vacations = vacationService.selectAllUnconfirmedVacations(PageRequest.of(currentPage-1, 8));
+
+        model.addAttribute(VACATIONS, vacations);
+        model.addAttribute(PAGE, vacations);
+
+        int totalPages = vacations.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .toList();
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("currentPage", currentPage);
+
+        return "vacationsActive";
+    }
+
+    @GetMapping("/sickleaves/active")
+    public String getActiveSickleaves(Model model, @RequestParam("page") Optional<Integer> page){
+        int currentPage = page.orElse(1);
+
+
+        model.addAttribute("colorActive", "#632673");
+        model.addAttribute("colorClosed", "black");
+
+        Page<SickLeaveDto> sickLeaves = sickLeavesService.selectAllUncofirmedSickLeaves(PageRequest.of(currentPage-1, 8));
+        model.addAttribute(SICKLEAVES, sickLeaves);
+        model.addAttribute(PAGE, sickLeaves);
+
+        int totalPages = sickLeaves.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .toList();
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("currentPage", currentPage);
+
+        return "sickleavesActive";
+    }
+
+    @GetMapping("/vacations/closed")
+    public String getClosedVacations(Model model, @RequestParam("page") Optional<Integer> page){
+
+        int currentPage = page.orElse(1);
+
+
+        model.addAttribute("colorActive", "black");
+        model.addAttribute("colorClosed", "#632673");
+
+        Page<VacationDto> vacations = vacationService.selectAllConfirmedVacations(PageRequest.of(currentPage-1, 6));
+
+        model.addAttribute(VACATIONS, vacations);
+        model.addAttribute(PAGE, vacations);
+
+        int totalPages = vacations.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .toList();
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("currentPage", currentPage);
+        return "vacationsClosed";
+    }
+
+    @GetMapping("/sickleaves/closed")
+    public String getClosedSickleaves(Model model, @RequestParam("page") Optional<Integer> page){
+
+        int currentPage = page.orElse(1);
+
+
+        model.addAttribute("colorActive", "black");
+        model.addAttribute("colorClosed", "#632673");
+
+        Page<SickLeaveDto> sickleaves = sickLeavesService.selectAllCofirmedSickLeaves(PageRequest.of(currentPage-1, 6));
+
+        model.addAttribute(SICKLEAVES, sickleaves);
+        model.addAttribute(PAGE, sickleaves);
+
+        int totalPages = sickleaves.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .toList();
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        model.addAttribute("currentPage", currentPage);
+        return "sickleavesClosed";
     }
 }

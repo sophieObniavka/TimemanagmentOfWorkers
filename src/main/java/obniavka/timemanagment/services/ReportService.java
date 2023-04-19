@@ -2,8 +2,10 @@ package obniavka.timemanagment.services;
 
 import obniavka.timemanagment.data.Report;
 import obniavka.timemanagment.domain.ReportDto;
+import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.repository.ReportRepository;
 import obniavka.timemanagment.utils.ReportMapper;
+import obniavka.timemanagment.utils.UserMapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class ReportService {
     }
 
     ReportMapper mapper = Mappers.getMapper(ReportMapper.class);
+    UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     public ReportDto findReportById(final Long id){
         Optional<Report> report = reportRepository.findById(id);
@@ -35,5 +38,5 @@ public class ReportService {
     }
 
     public List<ReportDto> fetchAllReportsFromDb() { return mapper.map(reportRepository.findAll());}
-    public List<ReportDto> fetchAllReportsByUserFromDb(Long id) { return mapper.map(reportRepository.findAllByUser(id));}
+    public List<ReportDto> fetchAllReportsByUserFromDb(final UserDto userDto) { return mapper.map(reportRepository.findAllByUserOrderByWorkDayAsc(userMapper.map(userDto)));}
 }

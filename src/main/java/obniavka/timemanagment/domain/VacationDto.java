@@ -1,11 +1,8 @@
 package obniavka.timemanagment.domain;
 
 import lombok.*;
-import obniavka.timemanagment.data.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,14 +25,19 @@ public class VacationDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate end;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime created;
 
-    @NotNull
-    private Boolean archived;
-    @NotNull
     private Boolean confirmed;
-    @NotNull
-    private Boolean atOwnExpense;
-    @NotNull
+
+    private boolean atOwnExpense;
+
     private UserDto user;
+
+    private String checkedByUser;
+
+    private String comment;
+
+    private Integer amountOfDays;
+
 }

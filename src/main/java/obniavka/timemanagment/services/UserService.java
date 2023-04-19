@@ -5,33 +5,28 @@ import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.repository.UserRepository;
 import obniavka.timemanagment.utils.UserMapper;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService  implements UserDetailsService{
 
 
     private final UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
     }
 
@@ -39,13 +34,15 @@ public class UserService implements UserDetailsService{
 
     public UserDto findUserById(final Long userId){
         Optional<User> user = userRepository.findById(userId);
-        return userMapper.map(user.orElse(null));
+        UserDto userDto = userMapper.map(user.orElse(null));
+        userDto.setConvertedImage(Base64.getEncoder().encodeToString(userDto.getImageUrl()));
+        return userDto;
     }
 
     public UserDto persistUserInDb(final UserDto userDto){
 
         User user = userMapper.map(userDto);
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
         user.setPasswordExpires(LocalDate.of(2024, 12, 11));
 
         return userMapper.map(userRepository.save(userMapper.map(userDto)));
@@ -57,47 +54,29 @@ public class UserService implements UserDetailsService{
 
     public void updatePassword(final String password, final Long id){
 
-        String res = passwordEncoder.encode(password);
+        String res = bCryptPasswordEncoder.encode(password);
         userRepository.updateUserPassword(res, id);
     }
-    public User findUserByEmail(String email){
-        Optional<User> user = userRepository.findUserByEmail(email);
-        if(user.isPresent()){
-            user.get().setPassword(passwordEncoder.encode(user.get().getPassword()));
-            return user.get();
-
-        }
-        return null;
+    public UserDto findUserByEmail(String email){
+        return userMapper.map(userRepository.findUserByEmail(email).orElse(null));
     }
 
     public List<UserDto> fetchAllUsersFromDb(){
-        return userMapper.map(userRepository.findAll());
+        List<UserDto> users = userMapper.map(userRepository.findAll());
+        users.stream().forEach(user -> user.setConvertedImage(Base64.getEncoder().encodeToString(user.getImageUrl())));
+        return users;
+    }
+
+    public void updateUser(UserDto user){
+        userRepository.updateUser(
+                user.getId(),user.getFirstName(),user.getLastName(),user.getBirth(),user.getHired(),user.getPhoneNumber(),user.getEmployeeId(),user.getRole(),user.getCountry(),user.getCity(),user.getStreet(),user.getHouseNumber(), user.getPostCode(),user.getEmail(), user.getImageUrl(), user.getVacationDays(), user.getSickleaveDays(), user.getVacationDays());
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findUserByEmail(email);
+    @Transactional
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-
-        System.out.println("Pyzda");
-        System.out.println(user.get().getPassword());
-        System.out.println("Does it match? " + user.get().getPassword().matches("sofiia123"));
-        System.out.println("Does it equal? " +  user.get().getPassword().equals("sofiia123"));
-
-        if(user.isEmpty()) {
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-
-        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), mapRolesToAuthorities(List.of(user.get())));
+        return findUserByEmail(s);
     }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<User> roles){
-        return roles.stream().map(x-> new SimpleGrantedAuthority(x.getRole())).collect(Collectors.toList());
-    }
-
-    public void updateUser(Long id, String firstName, String lastName, LocalDate birth, LocalDate hired, String phoneNumber, String employeeId, String role, String country, String city, String street, String houseNumber, String postCode, String email, byte imageUrl[]){
-        userRepository.updateUser(id,firstName,lastName,birth,hired,phoneNumber,employeeId,role,country,city,street,houseNumber, postCode,email, imageUrl);
-    }
-
 
 }

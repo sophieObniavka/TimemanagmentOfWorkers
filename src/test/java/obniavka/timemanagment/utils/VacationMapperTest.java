@@ -31,13 +31,15 @@ public class VacationMapperTest {
         userDto.setId(1L);
 
         vacationDto.setId(1L);
+
+
         vacationDto.setBegin(LocalDate.of(2023, Month.OCTOBER, 11));
         vacationDto.setEnd(LocalDate.of(2023, Month.DECEMBER, 23));
-        vacationDto.setArchived(false);
         vacationDto.setConfirmed(false);
         vacationDto.setUser(userDto);
         vacationDto.setAtOwnExpense(false);
         vacationDto.setCreated(LocalDateTime.now());
+        vacationDto.setCheckedByUser("User User");
         Vacation vacation = vacationMapper.map(vacationDto);
 
         assertNotNull(vacation);

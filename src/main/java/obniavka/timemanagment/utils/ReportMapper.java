@@ -20,9 +20,13 @@ public interface ReportMapper {
 
     List<ReportDto> map(final List<Report> reports);
 
+    @Mapping(target = "vacations", ignore = true)
     @Mapping(target = "reports", ignore = true)
+    @Mapping(target = "sickLeaves", ignore = true)
     UserDto map(final User user);
 
+    @Mapping(target = "vacations", ignore = true)
     @Mapping(target = "reports", ignore = true)
+    @Mapping(target = "sickLeaves", ignore = true)
     User map(UserDto userDto);
 }

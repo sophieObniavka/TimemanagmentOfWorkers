@@ -35,10 +35,6 @@
 
 <div class="container" style="width: auto">
 
-
-
-
-
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
                 <div class="container mt-3 mb-4">
                     <div class="col-lg-9 mt-4 mt-lg-0">
@@ -58,33 +54,35 @@
                                         </thead>
 
                                         <tbody>
-
-                                        <tr th:each="map: ${users}" class="candidates-list" >
+                                        <tr th:if="${users.isEmpty()}" >
+                                            <td colspan="3" th:text="#{NODATA}"></td>
+                                        </tr>
+                                        <tr th:each="u: ${users}" class="candidates-list" >
                                             <td class="title">
                                                 <div class="thumb">
-                                                    <img class="rounded-circle" width="150"  th:src="@{'data:image/**;charset=utf-8;base64,'+ *{map.value}}" alt="profile Image" >
+                                                    <img class="rounded-circle" width="150"  th:src="@{'data:image/**;charset=utf-8;base64,'+ *{u.convertedImage}}" alt="profile Image" >
                                                 </div>
                                                 <div class="candidate-list-details">
                                                     <div class="candidate-list-info">
                                                         <div class="candidate-list-title">
-                                                            <h5 class="mb-0"><a th:href="@{users/profile/{id}(id = ${map.key.id})}" th:text="''+ *{map.key.firstName} + ' '+ *{map.key.lastName} + ''"  ></a></h5>
+                                                            <h5 class="mb-0"><a th:href="@{users/profile/{id}(id = ${u.id})}" th:text="''+ *{u.firstName} + ' '+ *{u.lastName} + ''"  ></a></h5>
                                                         </div>
                                                         <div class="candidate-list-option">
                                                             <ul class="list-unstyled">
-                                                                <li><i class="fas fa-filter pr-1" th:text="*{map.key.employeeId}"></i></li>
-                                                                <li><i class="fas fa-map-marker-alt pr-1" th:text="''+ *{map.key.country} + ', '+ *{map.key.city} + ', ' + *{map.key.street} + ', ' + *{map.key.houseNumber} + ', ' + *{map.key.postCode}"></i></li>
+                                                                <li><i class="fas fa-filter pr-1" th:text="*{u.employeeId}"></i></li>
+                                                                <li><i class="fas fa-map-marker-alt pr-1" th:text="''+ *{u.country} + ', '+ *{u.city} + ', ' + *{u.street} + ', ' + *{u.houseNumber} + ', ' + *{u.postCode}"></i></li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="candidate-list-favourite-time text-center">
-                                                <span class="candidate-list-time order-1" th:text="*{map.key.role}"></span>
+                                                <span class="candidate-list-time order-1" th:text="#{*{u.role}}"></span>
                                             </td>
                                             <td>
                                                 <ul class="list-unstyled mb-0 d-flex justify-content-end">
-                                                    <li><a  class="text-info" data-toggle="tooltip" title="" data-original-title="Edit" th:href="@{users/{id}(id = ${map.key.id})}"><i class="fas fa-pencil-alt"></i></a></li>
-                                                    <li><a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{admin/users/delete/{id}(id = ${map.key.id})}" th:data-longDescription = "#{USER.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a></li>
+                                                    <li><a  class="text-info" data-toggle="tooltip" title="" data-original-title="Edit" th:href="@{users/{id}(id = ${u.id})}"><i class="fas fa-pencil-alt"></i></a></li>
+                                                    <li><a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{admin/users/delete/{id}(id = ${u.id})}" th:data-longDescription = "#{USER.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a></li>
                                                 </ul>
                                             </td>
                                         </tr>

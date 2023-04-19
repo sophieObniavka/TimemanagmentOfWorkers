@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link th:href="@{/styles/reportPopUp.css}" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 
-
-<!-- JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
 
 <head th:replace="fragments/header" th:object="${current}">
@@ -16,24 +8,34 @@
     <title>Report</title>
 </head>
 
-<body>
+<body style="height: 100vh;">
+<div class="container mt-2" style="display: flex;
+  justify-content: center ;">
 
-<input id="monthSel" type="month"  onchange="javascript:location.href = '/admin/report/selectedDate/' + this.value;" class="mt-2 mb-2 ml-2"   >
-<table class="table table-striped mt32 customers-list" id="tableData">
+    <button class="button-34" role="button" th:text="#{REPORT.NEW}" onclick="openModalToSaveNewReport()"></button>
+    <div th:replace="fragments/reportPopUp :: container(${reportNew})"></div>
+
+</div>
+<input id="monthSel" type="month" th:value="${selected}"  onchange="javascript:location.href = '/report/selectedDate/' + this.value;" class="mt-2 mb-2 ml-2"   >
+
+
+<table class="table report-list" id="tableData">
     <thead>
     <tr>
-        <th th:text="#{REPORT.DAY}"></th>
-        <th th:text="#{REPORT.DAYOFWEEK}"></th>
-        <th th:text="#{REPORT.MONTH}"></th>
-        <th th:text="#{REPORT.BEGIN}"></th>
-        <th th:text="#{REPORT.END}"></th>
-        <th th:text="#{REPORT.PAUSE}"></th>
-        <th th:text="#{REPORT.DESCRIPTION}"></th>
-        <th th:text="#{REPORT.ACTION}"></th>
+        <th scope="col" th:text="#{REPORT.DAY}"></th>
+        <th scope="col" th:text="#{REPORT.DAYOFWEEK}"></th>
+        <th scope="col" th:text="#{REPORT.MONTH}"></th>
+        <th scope="col" th:text="#{REPORT.BEGIN}"></th>
+        <th scope="col" th:text="#{REPORT.END}"></th>
+        <th scope="col" th:text="#{REPORT.PAUSE}"></th>
+        <th scope="col"  th:text="#{REPORT.DESCRIPTION}"></th>
+        <th scope="col" th:text="#{REPORT.ACTION}"></th>
     </tr>
     </thead>
     <tbody>
-
+    <tr th:if="${reports.isEmpty()}" >
+        <td colspan="9" th:text="#{NODATA}"></td>
+    </tr>
     <tr th:each="report : ${reports}">
         <td hidden="true" th:text="${report.id}" th:id="inputId + *{report.id}" ></td>
         <td hidden="true" th:text="${report.workDay}" th:id="inputMade + *{report.id}"></td>
@@ -64,12 +66,6 @@
     </tbody>
 </table>
 
-<div class="container" style="display: flex;
-  justify-content: center;">
 
-<button class="button-34" role="button" th:text="#{REPORT.NEW}" onclick="openModalToSaveNewReport()"></button>
-    <div th:replace="fragments/reportPopUp :: container(${reportNew})"></div>
-
-</div>
 </body>
 </html>

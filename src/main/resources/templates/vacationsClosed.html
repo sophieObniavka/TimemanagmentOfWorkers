@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<script th:src="@{/js/reject.js}" type="text/javascript"></script>
+
+<form th:object="${current}">
+    <head th:replace="fragments/header" style="margin-top: 0px">
+
+        <title th:text="#{USER.ADMIN}"></title>
+    </head>
+</form>
+<body  style="margin-top: 0px">
+
+<div th:replace="fragments/menuTabs :: menuTabs">
+</div>
+
+<div th:replace="fragments/menuTabs :: tabs('/admin/vacations/active','/admin/vacations/closed')"></div>
+<div id="content2" style="margin-left: 190px;height: 84vh;">
+
+<!--    587px-->
+    <div class="col-lg-12" >
+        <div class="main-box clearfix">
+            <div class="table-responsive" >
+                <table class="table user-list" width="100%">
+
+                    <thead>
+                    <tr style="background-color: white">
+                        <th th:text="#{USER}"><span></span></th>
+                        <th th:text="#{VACATION.CREATED}"><span></span></th>
+                        <th th:text="#{VACATION.BEGIN}"><span></span></th>
+                        <th th:text="#{VACATION.END}"><span></span></th>
+                        <th th:text="#{AMOUNTOfDAYS}"><span></span></th>
+                        <th th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
+                        <th th:text="#{VACATION.DAYS.LEFT}" ><span></span></th>
+                        <th  th:text="#{STATUS}"><span></span></th>
+                        <th  th:text="#{CHECKER}"><span></span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${vacations.isEmpty()}" >
+                        <td colspan="9" th:text="#{NODATA}"></td>
+                    </tr>
+                    <tr th:each="v : ${vacations}">
+                        <td>
+                            <img th:src="@{'data:image/**;charset=utf-8;base64,'+ ${v.user.convertedImage}}" alt="profile Image">
+                            <a th:href="@{/admin/users/profile/{id}(id = ${v.user.id})}" class="user-link" th:text="''+ ${v.user.firstName} + ' '+ ${v.user.lastName} + ''"  ></a>
+                            <span class="user-subhead" th:text=" #{${v.user.role}}"></span>
+                        </td>
+                        <td th:field="${v.created}" th:text="${v.created}">
+                        </td>
+                        <td th:field="${v.begin}" th:text="${v.begin}" >
+                        </td>
+                        <td th:field="${v.end}" th:text="${v.end}">
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-default" th:text="${v.amountOfDays}"></span>
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-default" th:text="#{${v.atOwnExpense}}"></span>
+                        </td>
+                        <td class="text-center">
+                            <span class="label label-default" th:text="${v.user.vacationDays}"></span>
+                        </td>
+
+                        <td style="width: 14%;">
+                            <div th:if="${v.confirmed}"  class="badge badge-success ml-2" th:text="#{CONFIRMED}"/>
+                            <div th:unless="${v.confirmed}" class="badge badge-danger ml-2" th:text="#{REJECT}"/>
+                        </td>
+
+                        <td class="text-center">
+                            <span class="label label-default" th:text="${v.checkedByUser}"></span>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/Pagination::pagination('/admin/vacations/closed')"></div>
+</div>
+
+</body>
+
+</html>

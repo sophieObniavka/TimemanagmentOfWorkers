@@ -2,6 +2,7 @@ package obniavka.timemanagment.utils;
 
 import obniavka.timemanagment.data.User;
 import obniavka.timemanagment.domain.ReportDto;
+import obniavka.timemanagment.domain.SickLeaveDto;
 import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.domain.VacationDto;
 import org.junit.jupiter.api.Assertions;
@@ -21,12 +22,12 @@ public class UserMapperTest {
         UserDto userDto = new UserDto();
         VacationDto vacationDto = new VacationDto();
         ReportDto reportDto = new ReportDto();
+        SickLeaveDto sickLeaveDto = new SickLeaveDto();
 
         vacationDto.setId(1L);
         vacationDto.setBegin(LocalDate.of(2022, Month.AUGUST, 24));
         vacationDto.setCreated(LocalDateTime.now());
         vacationDto.setConfirmed(false);
-        vacationDto.setArchived(true);
         vacationDto.setEnd(LocalDate.now());
         vacationDto.setUser(userDto);
 
@@ -37,6 +38,14 @@ public class UserMapperTest {
         reportDto.setPause(LocalTime.of(1,0));
         reportDto.setDescription("Work hard");
         reportDto.setUser(userDto);
+
+        sickLeaveDto.setId(1L);
+        sickLeaveDto.setBegin(LocalDate.of(2022, Month.AUGUST, 24));
+        sickLeaveDto.setCreated(LocalDateTime.now());
+        sickLeaveDto.setConfirmed(false);
+        sickLeaveDto.setEnd(LocalDate.now());
+        sickLeaveDto.setDescription("I am very sick");
+        sickLeaveDto.setUser(userDto);
 
         userDto.setId(2L);
         userDto.setCity("New York");
@@ -50,14 +59,17 @@ public class UserMapperTest {
         userDto.setPassword("ienbf781;/");
         userDto.setPhoneNumber("1234567890");
         userDto.setPostCode("231f2");
-        userDto.setRole("designer");
+        userDto.setRole("ROLE_ADMIN");
         userDto.setStreet("Sunny");
         userDto.setVacationDays(30);
+        userDto.setSickleaveDays(30);
+        userDto.setSalaryPerHour(20);
         userDto.setPasswordExpired(false);
         userDto.setBirth(LocalDate.of(1999, Month.AUGUST, 22));
         userDto.setHired(LocalDate.of(2022, Month.APRIL, 10));
         userDto.setVacations(Set.of(vacationDto));
         userDto.setReports(Set.of(reportDto));
+        userDto.setSickLeaves(Set.of(sickLeaveDto));
 
 
         User user = UserMapper.MAPPER.map(userDto);
@@ -65,5 +77,7 @@ public class UserMapperTest {
         Assertions.assertNotNull(user);
         Assertions.assertEquals(1, user.getVacations().size());
         Assertions.assertEquals(1, user.getReports().size());
+        Assertions.assertEquals(1, user.getSickLeaves().size());
+        Assertions.assertEquals("ROLE_ADMIN", user.getRole());
     }
 }

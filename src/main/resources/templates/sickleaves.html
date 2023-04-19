@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link th:href="@{/styles/vacations.css}" rel="stylesheet" />
+<link th:href="@{/styles/reportPopUp.css}" rel="stylesheet" />
+<link th:href="@{/styles/pagination.css}" rel="stylesheet" />
+
+
+<script th:src="@{/js/checkDates.js}" type="text/javascript"></script>
+<!-- JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
+
+
+<head th:replace="fragments/header" th:object="${current}">
+    <meta charset="UTF-8">
+    <title>Vacation</title>
+</head>
+
+<body  style="margin-top: 0px">
+
+<div id="content2" style="margin-left: 30px;margin-top:5px;height: 89vh;" >
+
+
+    <div class="col-lg-12" >
+        <div class="main-box clearfix">
+            <div class="table-responsive" >
+                <div class="container mb-2" style="display: flex;
+  justify-content: center">
+
+                    <button class="button-34" role="button" th:text="#{USER.APPLY.SICKLEAVE}" onclick="openModalToSaveSickLeave()"></button>
+                    <div th:replace="fragments/sickLeave :: container(${sickleave})"></div>
+
+                </div>
+
+
+                <table class="table user-list" width="100%">
+
+                    <thead>
+                    <tr style="background-color: white">
+                        <th th:text="#{VACATION.CREATED}"><span></span></th>
+                        <th th:text="#{VACATION.BEGIN}"><span></span></th>
+                        <th th:text="#{VACATION.END}"><span></span></th>
+                        <th th:text="#{AMOUNTOfDAYS}"><span></span></th>
+                        <th th:text="#{REPORT.DESCRIPTION}"><span></span></th>
+                        <th th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
+                        <th  th:text="#{STATUS}"><span></span></th>
+                        <th  th:text="#{COMMENTLEFT}"><span></span></th>
+                        <th  th:text="#{CHECKER}"><span></span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${sickleaves.isEmpty()}" >
+                        <td colspan="9" th:text="#{NODATA}"></td>
+                    </tr>
+                    <tr th:if="${!sickleaves.isEmpty()}" th:each="s : ${sickleaves}">
+                        <td th:field="${s.created.getDayOfMonth() + '/' + s.created.getMonthValue() + '/' + s.created.getYear() + ' ' + s.created.getHour() +':' + s.created.getMinute()}" th:text="${s.created}">
+                        </td>
+                        <td th:field="${s.begin}" th:text="${s.begin}" >
+                        </td>
+                        <td th:field="${s.end}" th:text="${s.end}">
+                        </td>
+                        <td th:field="${s.amountOfDays}" th:text="${s.amountOfDays}">
+                        </td>
+                        <td  th:field="${s.description}" th:text="${s.description}">
+                        </td>
+                        <td th:field="${s.atOwnExpense}" th:text="#{${s.atOwnExpense}}">
+                        </td>
+
+                        <td style="width: 14%;">
+                            <div th:if="${s.confirmed == null}"  class="badge badge-warning ml-2" th:text="#{UNDERCONSIDERATION}"/>
+                            <div th:if="${s.confirmed}"  class="badge badge-success ml-2" th:text="#{CONFIRMED}"/>
+                            <div th:if="${s.confirmed != null && !s.confirmed}" class="badge badge-danger ml-2" th:text="#{REJECT}"/>
+                        </td>
+
+                        <td th:field="${s.comment}" th:text="${s.comment}">
+                        </td>
+                        <td th:field="${s.checkedByUser}" th:text="${s.checkedByUser}">
+                        </td>
+                    </tr>
+
+                    </tbody>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+    <div th:if="${!sickleaves.isEmpty()}" >
+    <div  th:replace="fragments/Pagination::pagination('/sickleaves')"></div>
+</div>
+</div>
+
+</body>
+
+</html>

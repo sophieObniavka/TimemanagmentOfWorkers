@@ -1,0 +1,23 @@
+
+<nav class="main-menu" style="margin-top: 96px; height: 89vh" xmlns:th="http://www.thymeleaf.org" th:fragment="menuTabs">
+
+    <ul>
+        <li th:each="tab : ${tabsMenu}" th:class="'has-subnav ' + ${tab.active ? 'active' : ''}" style="margin-left: 0px">
+            <a th:href="${tab.getRequestUrl()}">
+                <i th:class="${tab.getIcon()}" ></i>
+                <span class="nav-text" th:text="#{${tab.getName()}}"></span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<ul class="nav nav-tabs"  xmlns:th="http://www.thymeleaf.org" th:fragment="tabs(firstLink, secondLink)" style="margin-left: 190px; background-color: black; color: white">
+    <li class="nav-item" th:style="'background-color: ' + ${colorActive}">
+        <a class="nav-link" th:href="@{${firstLink}}"  th:text="#{ACTIVE}" style="color: white"></a>
+    </li>
+    <li class="nav-item" th:style="'background-color: ' + ${colorClosed}">
+        <a class="nav-link"  th:href="@{${secondLink}}" style="color: white" th:text="#{CLOSED}"></a>
+    </li>
+</ul>
+
+

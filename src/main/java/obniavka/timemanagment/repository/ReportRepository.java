@@ -2,6 +2,7 @@ package obniavka.timemanagment.repository;
 
 
 import obniavka.timemanagment.data.Report;
+import obniavka.timemanagment.data.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface ReportRepository  extends JpaRepository<Report, Long> {
 
 
-    List<Report> findAllByUser(Long id);
+    List<Report> findAllByUserOrderByWorkDayAsc(final User user);
 
 
 }

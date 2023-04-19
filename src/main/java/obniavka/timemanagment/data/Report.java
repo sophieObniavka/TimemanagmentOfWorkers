@@ -1,18 +1,15 @@
 package obniavka.timemanagment.data;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Entity
 @Data
 @Builder(toBuilder = true)
-@EqualsAndHashCode(exclude="user")
 @NoArgsConstructor
 public class Report {
 
@@ -38,6 +35,8 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
 
 }

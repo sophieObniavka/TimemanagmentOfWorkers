@@ -1,0 +1,25 @@
+<div class="pagination" role="navigation" aria-label="Pagination" th:fragment="pagination(link)">
+    <ul>
+        <li th:class="${page.first} ? 'disabled'">
+            <a th:if="${page.hasPrevious()}" th:href="@{${link + '?page=' + (page.previousPageable().getPageNumber()+1)}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a th:unless="${page.hasPrevious()}" href="#" aria-label="Previous" class="disabled">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <li th:each="pageNumber : ${pageNumbers}" th:class="${pageNumber == page.number + 1} ? 'active'">
+            <a th:href="@{${link + '?page=' + pageNumber}}" th:text="${pageNumber}"></a>
+        </li>
+        <li th:class="${page.last} ? 'disabled'">
+            <a th:if="${not page.last}" th:href="@{${link + '?page=' + (page.nextPageable().getPageNumber()+1)}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+            <span th:if="${page.last}" aria-hidden="true">&raquo;</span>
+            <span class="sr-only" th:if="${page.last}">Next</span>
+        </li>
+    </ul>
+</div>

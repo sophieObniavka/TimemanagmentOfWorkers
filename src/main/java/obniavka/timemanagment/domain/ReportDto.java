@@ -17,14 +17,12 @@ import java.time.LocalTime;
 @Getter
 public class ReportDto {
     private Long id;
-
-
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime begin;
-
+    @DateTimeFormat(pattern = "HH:mm")
     private  LocalTime end;
-
+    @DateTimeFormat(pattern = "HH:mm")
     private  LocalTime pause;
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate workDay;
 

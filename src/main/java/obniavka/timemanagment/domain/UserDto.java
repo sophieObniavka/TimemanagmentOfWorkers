@@ -3,10 +3,15 @@ package obniavka.timemanagment.domain;
 import lombok.*;
 import obniavka.timemanagment.validation.DateConstraint;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Builder(toBuilder = true)
@@ -15,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
-public class UserDto {
+public class UserDto implements UserDetails {
 
     private Long id;
 
@@ -28,13 +33,11 @@ public class UserDto {
     private String lastName;
 
     @NotNull
-    //@NotEmpty(message = "{USER.BIRTHDATE.REQUIRED}")
     @DateConstraint
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
     @NotNull
-   // @NotEmpty(message = "{USER.HIRED.REQUIRED}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hired;
 
@@ -64,9 +67,15 @@ public class UserDto {
     @NotEmpty(message = "{USER.POSTCODE.REQUIRED}")
     private String postCode;
 
-    @NotNull
-    @NotEmpty(message = "{USER.VACATIONDAYS.REQUIRED}")
+    @NotNull(message = "{USER.VACATIONDAYS.REQUIRED}")
     private Integer vacationDays;
+
+    @NotNull(message = "{USER.SICKLEAVEDAYS.REQUIRED}")
+    private Integer sickleaveDays;
+
+    @NotNull(message = "{USER.SALARYPERHOUR.REQUIRED}")
+    private Integer salaryPerHour;
+
     @NotNull
     @NotEmpty(message = "{USER.EMAIL.REQUIRED}")
     @Pattern(regexp = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", message = "{USER.EMAIL.PATERN}")
@@ -81,7 +90,38 @@ public class UserDto {
     @NotEmpty(message = "{USER.PASSWORD.REQUIRED}")
     private String password;
 
+    private String convertedImage;
     private boolean passwordExpired;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(getRole()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -90,5 +130,11 @@ public class UserDto {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<ReportDto> reports = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<SickLeaveDto> sickLeaves = new HashSet<>();
+
+
 
 }

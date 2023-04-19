@@ -3,6 +3,7 @@ package obniavka.timemanagment.utils;
 import obniavka.timemanagment.data.Report;
 import obniavka.timemanagment.domain.ReportDto;
 import obniavka.timemanagment.domain.UserDto;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,5 +42,6 @@ public class ReportMapperTest {
 
         assertNotNull(report);
         assertNotNull(report.getUser());
+        Assertions.assertEquals(LocalTime.of(18,0), report.getEnd());
     }
 }

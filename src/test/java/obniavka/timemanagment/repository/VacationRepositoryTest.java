@@ -25,7 +25,6 @@ public class VacationRepositoryTest {
     public void initEach() {
        vacation = vacationRepository.save(Vacation.builder()
                 .id(4L)
-                .archived(false)
                 .confirmed(null)
                 .begin(LocalDate.of(2023, Month.FEBRUARY, 12))
                 .end(LocalDate.of(2023, Month.MARCH, 12))
@@ -41,7 +40,6 @@ public class VacationRepositoryTest {
         vacation.setId(1L);
         vacation.setBegin(LocalDate.of(2023, Month.JANUARY, 12));
         vacation.setEnd(LocalDate.of(2023, Month.FEBRUARY, 22));
-        vacation.setArchived(false);
         vacation.setConfirmed(null);
 
         Vacation res = vacationRepository.save(vacation);
@@ -50,7 +48,6 @@ public class VacationRepositoryTest {
         assertNotNull(vacation.getBegin());
         assertNotNull(vacation.getEnd());
         assertNull(vacation.getConfirmed());
-        assertNotNull(vacation.getArchived());
     }
 
     @DisplayName("Find vacation by id")
