@@ -22,7 +22,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
         if(authentication.getPrincipal() instanceof UserDto userDto){
-            setDefaultTargetUrl(userDto.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ? "/admin/homeAdmin" : "/report");
+            setDefaultTargetUrl(userDto.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ? "/admin/report" : "/report");
         }
         super.onAuthenticationSuccess(request, response, authentication);
     }

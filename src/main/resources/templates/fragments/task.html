@@ -1,0 +1,42 @@
+<div id="taskModal" class="modal" tabindex="-1" th:fragment="container">
+
+    <div class="modal-dialog" id="modalD">
+
+        <!-- Modal content-->
+        <div class="modal-content"  id="modalContent">
+            <div class="modal-header" id="modalHeader">
+                <h4 class="modal-title" th:text="#{TASK}"></h4>
+                <span class="close" th:onclick="'closeTask()'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="inputTaskForm" th:action="@{/admin/tasks}" class="mr-0" method="post" th:object="${taskChange}" >
+                    <div class="col-md-6">
+                        <ul  class="list-unstyled" >
+
+                            <input class="mr-20" id="taskId" th:name="id" th:field="*{id}" hidden="true" readonly>
+
+                            <li th:replace="fragments/fields::inputField(name, taskName,text, 'TASK.NAME')"></li>
+
+                            <li th:replace="fragments/fields::inputField(deadline, deadline,date, 'TASK.DEADLINE')"></li>
+                            <li style="height: 60px" class="mt-1">
+                                <label class=" mb-0" th:text="#{TASK.ASSIGNEDTO}"></label>
+                                <select class="form-control" id="editTaskAssignedTo" name="assignedTo" th:field="*{user.id}" style="width: 203px" >
+                                    <option value="" th:text="#{CHOOSE}" disabled th:selected="${taskChange.user.id == null ? 'selected' : ''}"></option>
+                                    <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.fullName()}"></option>
+                                </select>
+
+                            </li>
+                            <li th:replace="fragments/fields::inputDescriptionField(description, taskDescription, 'TASK.DESCRIPTION')"></li>
+                        </ul>
+
+                        <button  id="saveButton"  ><h3 th:text="#{REPORT.SAVE}"></h3></button>
+
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

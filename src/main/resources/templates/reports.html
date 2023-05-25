@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
+
+<head th:replace="fragments/header" th:object="${current}">
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+</head>
+</head>
+
+<body style="height: 100vh;">
+<div th:replace="fragments/menuTabs :: menuTabs">
+</div>
+
+<div id="content2" style="margin-left: 140px;overflow: auto;">
+<div style="margin-left: 170px;margin-top: 10px; margin-bottom: 10px">
+    <input id="monthSel" type="month" th:value="${selected}" onchange="javascript:location.href = '/admin/report/selectedDate/' + this.value" class="mt-2 mb-2 ml-2" style="margin-top: 7px; margin-bottom: 7px;">
+</div>
+
+
+<link th:href="@{/styles/report.css}" rel="stylesheet" />
+
+<table class="table-fill" id="tableData" style="width: 90%">
+    <thead>
+    <tr>
+        <th class="text-left" th:text="#{USER}"></th>
+        <th class="text-left" th:text="#{REPORT.DAY}"></th>
+        <th class="text-left" th:text="#{REPORT.DAYOFWEEK}"></th>
+        <th class="text-left" th:text="#{REPORT.MONTH}"></th>
+        <th class="text-left" th:text="#{REPORT.BEGIN}"></th>
+        <th class="text-left" th:text="#{REPORT.END}"></th>
+        <th class="text-left" th:text="#{REPORT.PAUSE}"></th>
+        <th class="text-left" th:text="#{TASK}"></th>
+        <th class="text-left"  th:text="#{REPORT.DESCRIPTION}"></th>
+        <th class="text-left"  th:text="#{REPORT.TOTAL}"></th>
+    </tr>
+    </thead>
+    <tbody  class="table-hover">
+    <tr th:if="${reports.isEmpty()}" >
+        <td colspan="9" th:text="#{NODATA}"></td>
+    </tr>
+    <tr th:each="report : ${reports}">
+        <td><a th:href="@{/admin/users/profile/{id}(id = ${report.user.id})}" class="user-link" th:text="${report.user.fullName()}"></a></td>
+        <td class="text-left" th:text="${report.workDay.getDayOfMonth()}" ></td>
+        <td class="text-left" th:text="#{${report.workDay.getDayOfWeek()}}" ></td>
+        <td class="text-left" th:text="#{${report.workDay.getMonth()}}" ></td>
+
+
+        <td class="text-left" th:text="${report.begin}" th:id="inputBegi + *{report.id}"></td>
+        <td class="text-left" th:text="${report.end}" th:id="inputEnd + *{report.id}"></td>
+        <td class="text-left" th:text="${report.pause}" th:id="inputPause + *{report.id}"></td>
+
+
+        <td th:if="${report.task}" class="text-left" th:text="${report.task.name}" th:id="inputTask + *{report.id}"></td>
+        <td th:unless="${report.task}" class="text-left" text="No Task" ></td>
+        <td class="text-left" th:text="${report.description}" th:id="inputDesc + *{report.id}"></td>
+
+        <td class="text-left" th:text="${report.amountOfHours}" ></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="mt-30" style="margin-top: 30px;">
+    <div th:replace="fragments/Pagination::pagination(${link})"></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,13 +1,7 @@
 package obniavka.timemanagment.utils;
 
-import obniavka.timemanagment.data.Report;
-import obniavka.timemanagment.data.SickLeave;
-import obniavka.timemanagment.data.User;
-import obniavka.timemanagment.data.Vacation;
-import obniavka.timemanagment.domain.ReportDto;
-import obniavka.timemanagment.domain.SickLeaveDto;
-import obniavka.timemanagment.domain.UserDto;
-import obniavka.timemanagment.domain.VacationDto;
+import obniavka.timemanagment.data.*;
+import obniavka.timemanagment.domain.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -20,7 +14,7 @@ public interface UserMapper {
     UserMapper MAPPER = Mappers.getMapper(UserMapper.class);
 
     UserDto map(final User user);
-    User map(UserDto userDto);
+    User map(final UserDto userDto);
     List<UserDto> map(final List<User> users);
 
     @Mapping(target = "user", ignore = true)
@@ -40,4 +34,23 @@ public interface UserMapper {
 
     @Mapping(target = "user", ignore = true)
     SickLeave map(final SickLeaveDto sickLeaveDto);
+
+    @Mapping(target = "user", ignore = true)
+    TaskDto map(final Task task);
+
+    @Mapping(target = "user", ignore = true)
+    Task map(final TaskDto taskDto);
+
+    @Mapping(target = "users", ignore = true)
+    AssignmentDto map(final Assignment assignment);
+
+    @Mapping(target = "users", ignore = true)
+    Assignment map(final AssignmentDto assignmentDto);
+
+    @Mapping(target = "user", ignore = true)
+    InvoiceDto map(final Invoice invoice);
+
+    @Mapping(target = "user", ignore = true)
+    Invoice map(final InvoiceDto invoiceDto);
+
 }

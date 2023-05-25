@@ -19,7 +19,6 @@ import java.util.Optional;
 @Service
 public class SickLeavesService {
     private final SickLeaveRepository sickLeaveRepository;
-    AmountOfDays amountOfDays = new AmountOfDays();
 
     public SickLeavesService(SickLeaveRepository sickLeaveRepository) {
         this.sickLeaveRepository = sickLeaveRepository;
@@ -43,7 +42,7 @@ public class SickLeavesService {
         Page<SickLeaveDto> sickLeaves = sickLeaveRepository.findAllSickLeaveByBeingNotConfirmedYet(pageable).map(sickLeaveMapper::map);
 
         sickLeaves.forEach(s -> s.getUser().setConvertedImage(Base64.getEncoder().encodeToString(s.getUser().getImageUrl())));
-        sickLeaves.forEach(v-> v.setAmountOfDays(amountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
+        sickLeaves.forEach(v-> v.setAmountOfDays(AmountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
 
         return sickLeaves;
     }
@@ -52,14 +51,14 @@ public class SickLeavesService {
         Page<SickLeaveDto> sickLeaves = sickLeaveRepository.findAllSickLeaveByBeingConfirmed(pageable).map(sickLeaveMapper::map);
 
         sickLeaves.forEach(s -> s.getUser().setConvertedImage(Base64.getEncoder().encodeToString(s.getUser().getImageUrl())));
-        sickLeaves.forEach(v-> v.setAmountOfDays(amountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
+        sickLeaves.forEach(v-> v.setAmountOfDays(AmountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
 
         return sickLeaves;
     }
     public Page<SickLeaveDto> findAllSickLLeavesByUser(final UserDto userDto, Pageable pageable){
         Page<SickLeaveDto> sickLeaves = sickLeaveRepository.findAllSickLeaveByUserOrderByCreated(userMapper.map(userDto), pageable).map(sickLeaveMapper::map);
 
-        sickLeaves.forEach(v-> v.setAmountOfDays(amountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
+        sickLeaves.forEach(v-> v.setAmountOfDays(AmountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
         return sickLeaves;
     }
 }

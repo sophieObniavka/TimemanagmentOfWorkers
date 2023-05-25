@@ -1,53 +1,28 @@
 <div id="vacationModal" class="modal" tabindex="-1" th:fragment="container(vacation)">
 
-    <div class="modal-dialog" style="top: 100px">
+    <div class="modal-dialog" id="modalD">
 
         <!-- Modal content-->
-        <div class="modal-content" style="width: 285px">
-            <div class="modal-header" style="background-color: black">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header" id="modalHeader">
                 <h4 class="modal-title" style="color: white" th:text="#{USER.VACATION}"></h4>
                 <span class="close" th:onclick="'closeVacationModal()'">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="inputVacationForm" th:action="action" class="mr-0" method="post" th:object="${vacation}" style="justify-content: center">
+                <form id="inputForm" th:action="@{/vacations}" class="mr-0" method="post" th:object="${vacation}" >
                     <span class="badge badge-info" style="width: 100%" th:field="${left}" id="left" th:text="#{VACATION.DAYS.LEFT} + ': '+ ${left}"></span>
                     <div class="col-md-6" style="width: 100%">
                         <ul  class="list-unstyled" style="width: 100%" >
 
                             <input class="mr-20" id="sId" th:name="id" th:field="*{id}" hidden="true" readonly>
-
-                            <li style="height: 60px">
-                                <label class="mb-0" th:text="#{VACATION.BEGIN}" ></label>
-                                <input class="mr-20" type="date" id="vacationBegin" th:name="name" th:field="*{begin}" style="width: 203px" required>
-
-                            </li>
-                            <li style="height: 60px" class="mt-1" >
-                                <label class=" mb-0" th:text="#{VACATION.END}"></label>
-                                <input  class="ml-20" id="vacationEnd" type="date" th:name="end" th:field="*{end}" style="width: 203px" required>
-
-                            </li>
-                            <li style="height: 60px" class="mt-1 ml-5px" >
-                                <div class="row" style="width: 203px">
-                                    <div class="flex-column" >
-                                        <input class="ml-2"  type="checkbox"  id="atOwn" th:field="*{atOwnExpense}" >
-                                    </div>
-                                    <div class="flex-column">
-                                        <label class=" mb-0" th:text="#{VACATION.ATOWNEXPENSE}"></label>
-                                    </div>
-                                </div>
-                            </li>
-
-                                <span id = "badDateVacation" style="color:red; width: 203px"> </span> <br><br>
-
-
-                            <button  id="saveButton"  style="width: 200px; height: 50px; background-color: black; color: white; justify-content: center" th:data-longDescription = "#{BADDATE}" th:data-description = "#{DAYS.LIMIT}" onclick="return checkDates(this.getAttribute('data-longDescription'), this.getAttribute('data-description'),'vacationBegin','vacationEnd','atOwn','badDateVacation','left')"><h3 th:text="#{REPORT.SAVE}"></h3></button>
+                            <li th:replace="fragments/fields::inputField(begin, vacationBegin,date, 'VACATION.BEGIN')"></li>
+                            <li th:replace="fragments/fields::inputField(end, vacationEnd,date, 'VACATION.END')"></li>
+                            <li th:replace="fragments/fields::checkBoxField(atOwn)"></li>
+                            <h7 id = "badDateVacation" style="display: block; width: 209px; color: red;"> </h7> <br><br>
+                            <button  id="saveButton" th:data-longDescription = "#{BADDATE}" th:data-description = "#{DAYS.LIMIT}" onclick="return checkDates(this.getAttribute('data-longDescription'), this.getAttribute('data-description'),'vacationBegin','vacationEnd','atOwn','badDateVacation','left')"><h3 th:text="#{REPORT.SAVE}"></h3></button>
 
                         </ul>
                     </div>
-
-
-
-
                 </form>
             </div>
         </div>

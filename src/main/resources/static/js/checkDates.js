@@ -1,9 +1,13 @@
 function checkDates(errorMessage, limit, beginId, endId, atOwn, message, leftId){
+    console.log("Blya " + beginId);
     var begin = document.getElementById(beginId).value;
     var end = document.getElementById(endId).value;
     var leftSpan = document.getElementById(leftId);
     var left = parseInt(leftSpan.textContent.split(":")[1].trim());
 
+    console.log("Begin " + begin);
+    console.log("End " + end);
+    console.log("Left " + left);
     var checkBox = document.getElementById(atOwn);
     var isChecked = checkBox.checked;
 

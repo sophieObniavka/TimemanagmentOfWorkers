@@ -1,0 +1,28 @@
+
+<div id="upload" class="modal" tabindex="-1" th:fragment="container">
+
+    <div class="modal-dialog" id="modalD">
+
+        <div class="modal-content" id="modalContent" style="width: 310px" >
+            <div class="modal-header" id="modalHeader">
+                <h4 class="modal-title" th:text="#{UPLOAD.INVOICE}"></h4>
+                <span class="close" th:onclick="'closeUpload()'">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="inputForm" th:action="@{/upload}" class="mr-0" method="post" th:object="${invoice}"  enctype="multipart/form-data">
+                    <div class="col-md-6">
+                        <ul  class="list-unstyled" >
+                            <input type="file" id="invoice" name="invoice" required/>
+                        </ul>
+
+                        <button type="submit" id="saveButton" th:data-longDescription = "#{INVOICE.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><h3 th:text="#{REPORT.SAVE}"></h3></button>
+
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>

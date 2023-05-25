@@ -39,4 +39,10 @@ public class Report {
     @EqualsAndHashCode.Exclude
     private User user;
 
+    @OneToOne(optional = true)
+    @JoinColumn(name = "task_id", referencedColumnName = "task_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Task task;
+
 }

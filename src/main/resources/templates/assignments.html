@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
+
+<head th:replace="fragments/header" >
+    <meta charset="UTF-8">
+    <title>Assignment</title>
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+</head>
+</head>
+
+<body style="background-color: transparent">
+<div id="content2" style="margin-top: 20px">
+
+    <link th:href="@{/styles/report.css}" rel="stylesheet" />
+    <div id="tableWrapper">
+        <table class="table-fill" id="tableData">
+            <thead>
+            <tr>
+                <th class="text-left" th:text="#{ASSIGNMENT}"></th>
+                <th class="text-left" th:text="#{REPORT.BEGIN}"></th>
+                <th class="text-left" th:text="#{REPORT.END}"></th>
+                <th class="text-left" th:text="#{USER.COUNTRY}"></th>
+                <th class="text-left" th:text="#{USER.CITY}"></th>
+                <th class="text-left"  th:text="#{REPORT.DESCRIPTION}"></th>
+            </tr>
+            </thead>
+            <tbody  class="table-hover">
+            <tr th:if="${assignments.isEmpty()}" >
+                <td colspan="9" th:text="#{NODATA}"></td>
+            </tr>
+            <tr th:each="assignment : ${assignments}">
+                <td class="text-left" th:text="${assignment.name}" ></td>
+
+                <td class="text-left" th:text="${assignment.begin}" ></td>
+                <td class="text-left" th:text="${assignment.end}" ></td>
+                <td class="text-left" th:text="${assignment.country}" ></td>
+                <td class="text-left" th:text="${assignment.city}"></td>
+
+                <td class="text-left" th:text="${assignment.description}" ></td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div style="margin-top: 40px">
+<div  th:replace="fragments/Pagination::pagination('/assignments')"></div>
+</div>
+</body>
+</html>

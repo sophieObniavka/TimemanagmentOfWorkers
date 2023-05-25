@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
+
+<head th:replace="fragments/header" th:object="${current}">
+    <meta charset="UTF-8">
+    <title>Task</title>
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+</head>
+</head>
+
+<body style="background-color: transparent">
+<div class="px-0 py-2 border-bottom-1 mt-4 ml-50" style="margin-left: 50px">
+    <ul class="nav col-12 col-lg-auto ml-10 my-2 justify-content-right my-md-0 text-small" >
+        <a>
+            <div class="container d-flex flex-wrap justify-content-center">
+                <form class=" col-lg-1111100 mb-2 mb-lg-200000 me-lg-1000" role="search" >
+                    <input type="search" th:value="${keyword}" id="keyword" name="keyword" class="form-control" th:placeholder="#{SEARCH.PLACEHOLDER}" style="width: 300px" onchange="resetSearch('/tasks')">
+                </form>
+            </div>
+
+            <a id="searchLink" th:value="${keyword}"  th:href="@{'/tasks' + ${page.number!=0 ? '?page=' + page.number+1 + '&' : '?' }}">
+                <button  type="button" class="btn btn-light text-dark me-2" th:text="#{SEARCH}"></button>
+            </a>
+        </a>
+    </ul>
+
+
+</div>
+
+
+<link th:href="@{/styles/report.css}" rel="stylesheet" />
+
+<table class="table-fill" id="tableData">
+    <thead>
+    <tr>
+        <th class="text-left" th:text="#{TASK.NAME}"></th>
+        <th class="text-left" th:text="#{TASK.DESCRIPTION}"></th>
+        <th class="text-left" th:text="#{TASK.DEADLINE}"></th>
+        <th class="text-left" th:text="#{TASK.PROGRESS}"></th>
+
+    </tr>
+    </thead>
+    <tbody  class="table-hover">
+    <tr th:if="${tasks.isEmpty()}" >
+        <td colspan="5" th:text="#{NODATA}"></td>
+    </tr>
+    <tr th:each="task : ${tasks}">
+        <td hidden="true" th:text="${task.id}" th:id="inputTaskId + *{task.id}" ></td>
+
+        <td class="text-left" th:text="${task.name}" th:id="inputTaskName + *{task.id}"></td>
+
+        <td class="text-left" th:text="${task.description}" th:id="inputTaskDesc + *{task.id}"></td>
+
+        <td class="text-left" th:text="${task.deadline}" th:id="inputTaskDeadline + *{task.id}"></td>
+
+        <td >
+            <form method="POST" th:action="${'/tasks/' + task.id}">
+            <select class="form-control" id="taskStatus" name="status" style="width: 203px" onchange="this.form.submit()">
+                <option th:selected="${task.isDone == null}" th:text="#{ASSIGNED}" th:value="null"></option>
+                <option th:selected="${task.isDone == false}" th:text="#{INPROGRESS}"  th:value="false"></option>
+                <option th:selected="${task.isDone == true }" th:text="#{DONE}"  th:value="true"></option>
+            </select>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</div>
+<div class="mt-30" style="margin-top: 30px;">
+    <div th:replace="fragments/Pagination::pagination('/tasks')"></div>
+</div>
+
+<script>
+    document.querySelector('#searchLink').addEventListener('click', function(event) {
+        var keyword = document.querySelector('#keyword').value;
+        if (keyword !== '') {
+            var href = document.getElementById('searchLink').getAttribute('href') + 'keyword=' + encodeURIComponent(keyword);
+            document.querySelector('#searchLink').setAttribute('href', href);
+        }
+    });
+</script>
+
+</body>
+</html>

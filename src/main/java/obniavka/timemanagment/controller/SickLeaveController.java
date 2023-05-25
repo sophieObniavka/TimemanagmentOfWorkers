@@ -11,43 +11,28 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import static obniavka.timemanagment.controller.helper.ModelConstants.*;
+import static obniavka.timemanagment.utils.Constants.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/sickleaves")
 public class SickLeaveController {
-    private static final String SICKLEAVE = "sickleave";
-    private static final String SICKLEAVES = "sickleaves";
-    private static final String CURRENT = "current";
 
     private final SickLeavesService sickLeavesService;
     private final UserService userService;
     @GetMapping()
     public String getSickleaves(Model model, @RequestParam("page") Optional<Integer> page, @ModelAttribute("current") UserDto user){
 
-        int currentPage = page.orElse(1);
-
-        Page<SickLeaveDto> sickLeaves = sickLeavesService.findAllSickLLeavesByUser(user, PageRequest.of(currentPage-1, 8));
+        Page<SickLeaveDto> sickLeaves = sickLeavesService.findAllSickLLeavesByUser(user, PageRequest.of(page.orElse(1)-1, 8));
 
         model.addAttribute("left", user.getSickleaveDays());
-        model.addAttribute(SICKLEAVES, user.getSickLeaves());
         model.addAttribute(SICKLEAVE, new SickLeaveDto());
-        model.addAttribute("page", sickLeaves);
 
-        int totalPages = sickLeaves.getTotalPages();
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .toList();
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-
-        model.addAttribute("currentPage", currentPage);
+       paginationModel(model,SICKLEAVES, page, sickLeaves,null);
 
         return SICKLEAVES;
 

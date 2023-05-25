@@ -4,7 +4,7 @@
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
 
-    <head th:replace="fragments/header">
+<head th:replace="fragments/header">
     <title th:text="#{USER.ADMIN}"></title>
 
 </head>
@@ -15,7 +15,7 @@
 
 <form th:action="@{/admin/users}" th:object="${user}" method="post" enctype="multipart/form-data">
     <input th:type="hidden" id="img" type="file" th:field="*{imageUrl}"/>
-    <input th:type="hidden" th:field="*{reports}">
+
     <script th:inline="javascript">function verifyPassword(errorMessage) {
         var pw = document.getElementById("passwordNew").value;
         var pR = document.getElementById("passwordRepeat").value;
@@ -25,17 +25,6 @@
             document.getElementById("message").innerHTML = errorMessage;
             return false;
         }
-
-//     //minimum password length validation
-//     if(pw.length < 8) {
-//         document.getElementById("message").innerHTML = "**Password length must be atleast 8 characters";
-//         return false;
-//     }
-//
-// //maximum length of password validation
-//     if(pw.length > 15) {
-//         document.getElementById("message").innerHTML = "**Password length must not exceed 15 characters";
-//         return false;
         else {
            document.getElementById("saveButton").setAttribute('type', 'submit');
 
@@ -46,38 +35,21 @@
     <hr class="mt-0 mb-4">
     <div class="row">
         <div class="col-xl-4">
-            <input id="userId" type="hidden" th:field="*{id}" readonly />
             <!-- Profile picture card-->
             <div class="card mb-4 mb-xl-0">
                 <div class="card-header center" th:text = "#{USER.PHOTO}" ></div>
                 <div class="card-body text-center">
                     <!-- Profile picture image-->
-                    <img class="rounded-circle" width="150" height="150" id = "profileImage" th:src="@{'data:image/**;charset=utf-8;base64,'+ ${image}}" alt="profile Image"/>
+                    <img th:if="${user.convertedImage}" id="profileImageForm" width="150" height="150" class="rounded-circle" th:src="@{'data:image/**;charset=utf-8;base64,'+ ${user.convertedImage}}" alt="profile Image" />
+                    <img th:unless="${user.convertedImage}" id="defaultForm" width="150" height="150"  class="rounded-circle" src="/image/icon.png" alt="profile Image" />
                     <div class="form-group row">
                         <label for="image" class="col-sm-2 col-form-label"/>
                         <div class="col-sm-5">
-                            <input type="file" id="image" name="image" onchange="loadFile(event)" onclick="setPic()"/>
+                            <input type="file" id="image" name="image" onchange="loadFile(event)"/>
                         </div>
                     </div>
 
                 </div>
-                <script>
-                    var loadFile = function(event) {
-                        var image = document.getElementById('profileImage');
-                        image.src = URL.createObjectURL(event.target.files[0]);
-                    };
-
-                    var setDefault = function () {
-                        document.getElementById('profileImage').style.visibility='hidden';
-                        document.getElementById('default').style.visibility='visible';
-                    };
-
-                    var setPic = function (){
-                        document.getElementById('profileImage').style.visibility='visible';
-                        document.getElementById('default').style.visibility='hidden';
-                    }
-
-                </script>
             </div>
         </div>
         <div class="col-xl-8">
@@ -86,9 +58,9 @@
                 <div class="card-header" th:text="#{USER.REGISTRATION}"></div>
                 <div class="card-body">
                     <form>
+                        <input id="userid" class="form-control"  type="text" th:field="*{id}" hidden>
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
-
                             <div class="col-md-6 ">
                                 <label class="small mb-1"  th:text = "#{USER.FIRSTNAME}"></label>
                                 <input id="firstName" class="form-control"  type="text" th:field="*{firstName}">
@@ -98,6 +70,16 @@
                                 <label class="small mb-1" th:text = "#{USER.LASTNAME}"></label>
                                 <input id="lastName" class="form-control" type="text" th:field="*{lastName}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.PATRONYMIC}"></label>
+                                <input id="patronymic" class="form-control"  type="text" th:field="*{patronymic}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text = "#{USER.TAXNUMBER}"></label>
+                                <input id="taxNumber" class="form-control"  type="text" th:field="*{taxNumber}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('taxNumber')}" th:errors="*{taxNumber}" >
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" th:text = "#{USER.BIRTH}"></label>
@@ -114,13 +96,11 @@
                                 <input id="phoneNumber" class="form-control"  type="tel" th:field="*{phoneNumber}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" >
                             </div>
-
                             <div class="col-md-6">
-                                <label class="small mb-1" th:text = "#{USER.EMPLOYEEID}"></label>
-                                <input id="employeeId" class="form-control" type="text" th:field="*{employeeId}">
-                                <p class="alert alert-danger" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}" >
+                                <label class="small mb-1" th:text = "#{USER.POSITION}"></label>
+                                <input id="position" class="form-control" type="text" th:field="*{position}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('position')}" th:errors="*{position}" >
                             </div>
-
                             <div class="col-md-6">
                                 <label class="small mb-1" th:text = "#{USER.VACATIONS.AMOUNT}"></label>
                                 <input id="vacationDays" class="form-control" type="text" th:field="*{vacationDays}">
@@ -139,11 +119,17 @@
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('salaryPerHour')}" th:errors="*{salaryPerHour}" >
                             </div>
 
+                            <select name="currency" id="currency"  th:field="*{currency}" style="height: 30px; margin-top: 25px">
+                                <option value="" disabled></option>
+                                <option th:each="cur : ${currencies}"  th:value="${cur}" th:text="${cur}"></option>
+                            </select>
+                            <p class="alert alert-danger" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" >
+
                         </div>
                         <label class="radio-label" th:text = "#{USER.ROLE}"></label>
                         <div class="form-radio" id="role" style="display: -webkit-flex;.form-radio { margin-bottom: 18px;}">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="ROLE_USER" checked th:field="*{role}">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="ROLE_USER" th:field="*{role}">
                                 <label class="form-check-label" for="inlineRadio1" th:text="#{USER.ROLE.OPTION1}"></label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -188,7 +174,26 @@
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}" >
                             </div>
                         </div>
-                        <!-- Form Group (email address)-->
+
+                        <div class="card-header mt-3" th:text="#{USER.BANK.DATA}"></div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.ACCOUNT}"></label>
+                                <input class="form-control" id="account" type="text" th:field="*{account}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('account')}" th:errors="*{account}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.BENEFICIARYBANK}"></label>
+                                <input class="form-control" id="beneficiaryBank" type="text" th:field="*{beneficiaryBank}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('beneficiaryBank')}" th:errors="*{beneficiaryBank}" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" th:text="#{USER.SWIFTCODE}"></label>
+                                <input class="form-control" id="swiftCode" type="text" th:field="*{swiftCode}">
+                                <p class="alert alert-danger" th:if="${#fields.hasErrors('swiftCode')}" th:errors="*{swiftCode}" >
+                            </div>
+                        </div>
+                            <!-- Form Group (email address)-->
                         <div class="card-header mt-3" th:text="#{USER.SIGNIN.DATA}"></div>
 
                         <div class="row gx-3 mb-3">
@@ -196,19 +201,14 @@
                             <label class="small mb-1" th:text="#{USER.EMAIL}"></label>
                             <input class="form-control" id="email" type="email" th:field="*{email}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" >
+                                <p class="alert alert-danger" th:if="${doesExist}" th:text="#{USER.EMAIL.ALREADYEXIST}" >
                             </div>
 
-                            <tr th:if="*{id==null}">
-                            <div class="col-md-6">
-                                <label class="small mb-1" th:text="#{USER.PASSWORD}"></label>
-                                <input class="form-control" id="password" type="password" th:field="*{password}" autocomplete="off">
-                                <p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" >
-                            </div>
-                            </tr>
-                            <tr th:if="*{id!=null}" class="mt-2">
-                                    <div class="col-md-6 box">
-                                        <a class="button" href="#popup1" th:text="#{USER.CHANGEPASSWORD}"></a>
-                                    </div>
+                            <tr th:if="${user.id}">
+                                <div class="col-md-6 box">
+                                    <a class="button" href="#popup1" th:text="#{USER.CHANGEPASSWORD}"></a>
+
+                                </div>
 
 
                                 <form>
@@ -217,7 +217,7 @@
                                             <a class="close" href="#">&times;</a>
                                             <div class="content">
 
-                                                    <!-- Enter Password -->
+                                                <!-- Enter Password -->
                                                 <div class="card-header" th:text="#{USER.CHANGEPASSWORD}"></div>
                                                 <div class="col-md-6 mt-4">
                                                     <ul  class="list-unstyled" style="width: 200px">
@@ -233,11 +233,18 @@
                                                     </ul>
                                                 </div>
 
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
 
                                 </form>
+                            </tr>
+                            <tr th:unless="${user.id}" class="mt-2">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" th:text="#{USER.PASSWORD}"></label>
+                                    <input  class="form-control" id="password" type="password" th:field="*{password}" >
+                                    <p class="alert alert-danger"th:if="${#fields.hasGlobalErrors()}" th:errors="*{password}" th:field="*{password}">
+                                </div>
                             </tr>
                         </div>
                         <!-- Save changes button-->

@@ -1,71 +1,125 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
 
+<link rel="stylesheet" href="/styles/bootstrap.min.css">
+
 <head th:replace="fragments/header" th:object="${current}">
     <meta charset="UTF-8">
     <title>Report</title>
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+</head>
 </head>
 
-<body style="height: 100vh;">
-<div class="container mt-2" style="display: flex;
+<body>
+
+<div id="content2" >
+<div class="mt-2" style="display: flex;
   justify-content: center ;">
 
     <button class="button-34" role="button" th:text="#{REPORT.NEW}" onclick="openModalToSaveNewReport()"></button>
-    <div th:replace="fragments/reportPopUp :: container(${reportNew})"></div>
-
+    <div th:replace="fragments/reportPopUp :: container"></div>
 </div>
-<input id="monthSel" type="month" th:value="${selected}"  onchange="javascript:location.href = '/report/selectedDate/' + this.value;" class="mt-2 mb-2 ml-2"   >
 
-
-<table class="table report-list" id="tableData">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 15px">
+    <div style="margin-left: 120px;">
+    <input id="monthSel" type="month" th:value="${selected}" onchange="javascript:location.href = '/report/selectedDate/' + this.value" class="mt-2 mb-2 ml-2" >
+    </div>
+    <div  style="margin-left: 460px;margin-bottom: 8px;">
+            <button th:disabled="${reports.isEmpty()}" style="background-color: black;color: white; height: 50px; font-size: 20px" onclick="openToUpload()" th:text="#{UPLOAD.INVOICE}"></button>
+            <div th:replace="fragments/invoiceUpload :: container"></div>
+    </div>
+    <div style="margin-left: 10px;">
+        <form th:action="@{/convert/{date}(date = ${selected})}" target="_blank" method="get">
+            <button th:disabled="${reports.isEmpty()}" style="background-color: black;color: white; height: 50px; font-size: 20px" th:text="#{CREATE.INVOICE}"></button>
+        </form>
+    </div>
+    <div style="margin-right: 130px;">
+        <form th:action="@{/export-to-excel/{date}(date = ${selected})}" method="get">
+        <button th:disabled="${reports.isEmpty()}" type="submit" style="background-color: black;color: white; height: 50px; font-size: 20px" th:text="#{EXPORT.REPORT}"></button>
+        </form>
+    </div>
+</div>
+    <link th:href="@{/styles/report.css}" rel="stylesheet" />
+    <div id="tableWrapper">
+<table class="table-fill" id="tableData">
     <thead>
     <tr>
-        <th scope="col" th:text="#{REPORT.DAY}"></th>
-        <th scope="col" th:text="#{REPORT.DAYOFWEEK}"></th>
-        <th scope="col" th:text="#{REPORT.MONTH}"></th>
-        <th scope="col" th:text="#{REPORT.BEGIN}"></th>
-        <th scope="col" th:text="#{REPORT.END}"></th>
-        <th scope="col" th:text="#{REPORT.PAUSE}"></th>
-        <th scope="col"  th:text="#{REPORT.DESCRIPTION}"></th>
-        <th scope="col" th:text="#{REPORT.ACTION}"></th>
+        <th class="text-left" th:text="#{REPORT.DAY}"></th>
+        <th class="text-left" th:text="#{REPORT.DAYOFWEEK}"></th>
+        <th class="text-left" th:text="#{REPORT.MONTH}"></th>
+        <th class="text-left" th:text="#{REPORT.BEGIN}"></th>
+        <th class="text-left" th:text="#{REPORT.END}"></th>
+        <th class="text-left" th:text="#{REPORT.PAUSE}"></th>
+        <th class="text-left" th:text="#{TASK}"></th>
+        <th class="text-left"  th:text="#{REPORT.DESCRIPTION}"></th>
+        <th class="text-left"  th:text="#{REPORT.TOTAL}"></th>
+        <th class="text-left" th:text="#{REPORT.ACTION}"></th>
     </tr>
     </thead>
-    <tbody>
+    <tbody  class="table-hover">
     <tr th:if="${reports.isEmpty()}" >
-        <td colspan="9" th:text="#{NODATA}"></td>
+        <td colspan="10" th:text="#{NODATA}"></td>
     </tr>
     <tr th:each="report : ${reports}">
         <td hidden="true" th:text="${report.id}" th:id="inputId + *{report.id}" ></td>
         <td hidden="true" th:text="${report.workDay}" th:id="inputMade + *{report.id}"></td>
 
-        <td th:text="${report.workDay.getDayOfMonth()}" ></td>
-        <td th:text="#{${report.workDay.getDayOfWeek()}}" ></td>
-        <td th:text="#{${report.workDay.getMonth()}}" ></td>
+        <td class="text-left" th:text="${report.workDay.getDayOfMonth()}" ></td>
+        <td class="text-left" th:text="#{${report.workDay.getDayOfWeek()}}" ></td>
+        <td class="text-left" th:text="#{${report.workDay.getMonth()}}" ></td>
 
 
-        <td th:text="${report.begin}" th:id="inputBegi + *{report.id}"></td>
-        <td th:text="${report.end}" th:id="inputEnd + *{report.id}"></td>
-        <td th:text="${report.pause}" th:id="inputPause + *{report.id}"></td>
+        <td class="text-left" th:text="${report.begin}" th:id="inputBegi + *{report.id}"></td>
+        <td class="text-left" th:text="${report.end}" th:id="inputEnd + *{report.id}"></td>
+        <td class="text-left" th:text="${report.pause}" th:id="inputPause + *{report.id}"></td>
 
-        <td th:text="${report.description}" th:id="inputDesc + *{report.id}"></td>
+
+        <td th:if="${report.task}" class="text-left" th:text="${report.task.name}" th:id="inputTask + *{report.id}"></td>
+        <td th:unless="${report.task}" class="text-left" text="No Task" ></td>
+        <td class="text-left" th:text="${report.description}" th:id="inputDesc + *{report.id}"></td>
+
+        <td class="text-left" th:text="${report.amountOfHours}" ></td>
 
         <td>
-            <a  class="text-info" data-toggle="tooltip" title="" data-original-title="Edit" th:data-longDescription = "${report.id}" onclick="openModal(this.getAttribute('data-longDescription'))" ><i class="fas fa-pencil-alt"></i></a>
-            <a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{report/delete/{id}(id = ${report.id})}" th:data-longDescription = "#{REPORT.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a>
-            <div th:replace="fragments/reportPopUp :: container(${reportOnChange})">
+            <a  class="text-info" data-toggle="tooltip" title="" data-original-title="Edit" th:data-longDescription = "${report.id}" th:data-task-id ="${report.task == null ? 0 : report.task.id}" onclick="openModal(this.getAttribute('data-longDescription'), this.getAttribute('data-task-id'))" ><i class="fas fa-pencil-alt"></i></a>
+            <a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{/report/delete/{id}(id = ${report.id})}" th:data-longDescription = "#{REPORT.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a>
+            <div th:replace="fragments/reportPopUp :: container">
 
             </div>
         </td>
-
-
-
-
     </tr>
     </tbody>
 </table>
+    </div>
 
+</div>
+<h3 th:text="#{REPORT.TOTALSUM} + ' ' + ${total}" style="margin-left: 120px;margin-top: 10px; margin-bottom: 10px"></h3>
 
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3">
+    <!-- Toast -->
+    <div class="toast" th:if="${showToast}">
+        <div class="toast-header">
+            <strong class="me-auto" th:text="#{SUCCESS}">Toast Title</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" th:text="#{SUCCESSFULLY.UPLOADED}"></div>
+    </div>
+</div>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var toastEl = document.querySelector('.toast');
+        var toast = new bootstrap.Toast(toastEl);
+
+        toastEl.classList.add('bg-success', 'text-white');
+
+        toast.show();
+        // setTimeout(function() {
+        //     toast.hide();
+        // }, 10000);
+    });
+</script>
 </body>
 </html>

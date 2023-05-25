@@ -1,63 +1,36 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<link th:href="@{/styles/reportPopUp.css}" rel="stylesheet" />
 
+<div id="myModal" class="modal" tabindex="-1" th:fragment="container">
 
-</script>
-<head>
+    <div class="modal-dialog" id="modalD">
 
-</head>
-<body>
-<div id="myModal" class="modal" tabindex="-1" th:fragment="container(reportOnChange)">
-
-    <div class="modal-dialog" style="top: 100px">
-
-        <!-- Modal content-->
-        <div class="modal-content" style="width: 285px">
-            <div class="modal-header" style="background-color: black">
-                <h4 class="modal-title" style="color: white" th:text="#{REPORT}"></h4>
+        <div class="modal-content" id="modalContent" >
+            <div class="modal-header" id="modalHeader">
+                <h4 class="modal-title" th:text="#{REPORT}"></h4>
                 <span class="close" th:onclick="'closeModal()'">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="inputForm" th:action="action" class="mr-0" method="post" th:object="${reportOnChange}" style="justify-content: center">
+                <form id="inputForm" th:action="@{/report}" class="mr-0" method="post" th:object="${reportOnChange}" >
                     <div class="col-md-6">
                         <ul  class="list-unstyled" >
 
                             <input class="mr-20" id="sId" th:name="id" th:field="*{id}" hidden="true" readonly>
 
-
-                            <li style="height: 60px">
-                                <label class="mb-0" th:text="#{REPORT.DATE}" ></label>
-                                <input class="mr-20" type="date" id="date" th:name="name" th:field="*{workDay}" style="width: 203px" required>
-
-                            </li>
-                            <li style="height: 60px" class="mt-1" >
-                                <label class=" mb-0" th:text="#{REPORT.BEGIN}"></label>
-                                <input  class="ml-20" id="begi" type="time" th:name="begin" th:field="*{begin}" style="width: 203px" required>
-
-                            </li>
+                            <li th:replace="fragments/fields::inputField(workDay, date,date, 'REPORT.DATE')"></li>
+                            <li th:replace="fragments/fields::inputField(begin, begi,time, 'REPORT.BEGIN')"></li>
+                            <li th:replace="fragments/fields::inputField(end, end,time, 'REPORT.END')"></li>
+                            <li th:replace="fragments/fields::inputField(pause, pause,time, 'REPORT.PAUSE')"></li>
                             <li style="height: 60px" class="mt-1">
-                                <label class=" mb-0" th:text="#{REPORT.END}"></label>
-                                <input class="ml-20" id="end" type="time" th:name="end" th:field="*{end}" style="width: 203px" required>
+                                <label class=" mb-0" th:text="#{TASK}"></label>
+                                <select class="form-control" id="taskReport" name="taskReport" th:field="*{task.id}" style="width: 203px" >
+                                    <option value="" th:text="#{CHOOSE}" disabled ></option>
+                                    <option th:each="task : ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
+                                </select>
 
                             </li>
-                            <li style="height: 60px" class="mt-1">
-                                <label class="mb-0" th:text="#{REPORT.PAUSE}"></label>
-
-                                <input class="mr-20" id="pause" type="time" th:name="pause" th:field="*{pause}" style="width: 203px" required>
-
-
-                            </li>
-                            <li class="mt-1">
-
-                                <label class="mb-0" th:text="#{REPORT.DESCRIPTION}"></label>
-
-                                <textarea  id="description" th:name="description" th:field="*{description}" style="width: 203px; height: 60px" required />
-
-                            </li>
+                            <li th:replace="fragments/fields::inputDescriptionField(description, description, 'REPORT.DESCRIPTION')"></li>
                         </ul>
 
-                        <button  id="saveButton"  style="width: 200px; height: 50px; background-color: black; color: white;" ><h3 th:text="#{REPORT.SAVE}"></h3></button>
+                        <button  id="saveButton" ><h3 th:text="#{REPORT.SAVE}"></h3></button>
 
 
                     </div>
@@ -68,9 +41,3 @@
 
     </div>
 </div>
-
-</body>
-
-
-
-</html>

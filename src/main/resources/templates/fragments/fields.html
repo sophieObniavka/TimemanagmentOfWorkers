@@ -1,0 +1,20 @@
+<li th:fragment="inputField(field,id, type, name)" style="height: 60px" class="mt-1">
+    <label class="mb-0" th:text="#{__${name}__}" ></label>
+    <input class="mr-20" th:type="${type}" th:id="${id}" th:field="*{__${field}__}" style="width: 203px" required>
+</li>
+
+<li  th:fragment="inputDescriptionField(field,id, name)" class="mt-1">
+    <label class="mb-0" th:text="#{__${name}__}"></label>
+    <textarea  th:id="${id}" th:name="description" th:field="*{__${field}__}" style="width: 203px; height: 60px" required></textarea>
+</li>
+
+<li th:fragment="checkBoxField(id)" style="height: 30px" class="mt-1 ml-5px" >
+    <div class="row" style="width: 203px">
+        <div class="flex-column" >
+            <input class="ml-2"  type="checkbox"  th:id="${id}" th:field="*{atOwnExpense}" >
+        </div>
+        <div class="flex-column ml-2">
+            <label class=" mb-0" th:text="#{VACATION.ATOWNEXPENSE}"></label>
+        </div>
+    </div>
+</li>

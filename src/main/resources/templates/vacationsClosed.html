@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <script th:src="@{/js/reject.js}" type="text/javascript"></script>
 
-<form th:object="${current}">
+
     <head th:replace="fragments/header" style="margin-top: 0px">
 
         <title th:text="#{USER.ADMIN}"></title>
     </head>
-</form>
-<body  style="margin-top: 0px">
+
+<body  style="background-color: transparent">
 
 <div th:replace="fragments/menuTabs :: menuTabs">
 </div>
 
 <div th:replace="fragments/menuTabs :: tabs('/admin/vacations/active','/admin/vacations/closed')"></div>
-<div id="content2" style="margin-left: 190px;height: 84vh;">
+<div id="content2" style="margin-left: 190px;">
 
 <!--    587px-->
     <div class="col-lg-12" >
@@ -23,15 +23,14 @@
 
                     <thead>
                     <tr style="background-color: white">
-                        <th th:text="#{USER}"><span></span></th>
-                        <th th:text="#{VACATION.CREATED}"><span></span></th>
-                        <th th:text="#{VACATION.BEGIN}"><span></span></th>
-                        <th th:text="#{VACATION.END}"><span></span></th>
-                        <th th:text="#{AMOUNTOfDAYS}"><span></span></th>
-                        <th th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
-                        <th th:text="#{VACATION.DAYS.LEFT}" ><span></span></th>
-                        <th  th:text="#{STATUS}"><span></span></th>
-                        <th  th:text="#{CHECKER}"><span></span></th>
+                        <th scope="col" th:text="#{USER}"><span></span></th>
+                        <th scope="col" th:text="#{VACATION.CREATED}"><span></span></th>
+                        <th scope="col" th:text="#{VACATION.BEGIN}"><span></span></th>
+                        <th scope="col" th:text="#{VACATION.END}"><span></span></th>
+                        <th scope="col" th:text="#{AMOUNTOfDAYS}"><span></span></th>
+                        <th scope="col" th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
+                        <th scope="col" th:text="#{STATUS}"><span></span></th>
+                        <th scope="col" th:text="#{CHECKER}"><span></span></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -42,7 +41,6 @@
                         <td>
                             <img th:src="@{'data:image/**;charset=utf-8;base64,'+ ${v.user.convertedImage}}" alt="profile Image">
                             <a th:href="@{/admin/users/profile/{id}(id = ${v.user.id})}" class="user-link" th:text="''+ ${v.user.firstName} + ' '+ ${v.user.lastName} + ''"  ></a>
-                            <span class="user-subhead" th:text=" #{${v.user.role}}"></span>
                         </td>
                         <td th:field="${v.created}" th:text="${v.created}">
                         </td>
@@ -55,9 +53,6 @@
                         </td>
                         <td class="text-center">
                             <span class="label label-default" th:text="#{${v.atOwnExpense}}"></span>
-                        </td>
-                        <td class="text-center">
-                            <span class="label label-default" th:text="${v.user.vacationDays}"></span>
                         </td>
 
                         <td style="width: 14%;">

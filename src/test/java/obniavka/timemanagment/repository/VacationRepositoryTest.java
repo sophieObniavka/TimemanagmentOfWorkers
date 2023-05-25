@@ -1,5 +1,6 @@
 package obniavka.timemanagment.repository;
 
+import obniavka.timemanagment.data.Report;
 import obniavka.timemanagment.data.User;
 import obniavka.timemanagment.data.Vacation;
 import org.junit.jupiter.api.Assertions;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Month;
 
 @DataJpaTest
@@ -19,6 +21,7 @@ public class VacationRepositoryTest {
 
     @Autowired
     private VacationRepository vacationRepository;
+
 
     private Vacation vacation;
     @BeforeEach
@@ -31,8 +34,8 @@ public class VacationRepositoryTest {
                 .build());
 
        vacationRepository.save(Vacation.builder().id(3L).build());
+       vacationRepository.save(vacation);
     }
-
     @DisplayName("Create vacation")
     @Test
     void testCreateVacation(){
@@ -54,7 +57,6 @@ public class VacationRepositoryTest {
     @Test
     void testFindVacationById(){
         Vacation vac = vacationRepository.findById( vacationRepository.findAll().get(1).getId()).orElse(null);
-        vacationRepository.findAll().forEach(x-> System.out.println(x.getId()));
         assertNotNull(vac);
     }
 
@@ -67,15 +69,11 @@ public class VacationRepositoryTest {
     @DisplayName("Delete vacation")
     @Test
     void testDeleteVacation(){
-
-
-        System.out.println("All ");
-        vacationRepository.findAll().forEach(x -> System.out.println(x.getId()));
-        Vacation vac1 = vacationRepository.findById(4L).orElse(null);
+        Vacation vac1 = vacationRepository.findById(vacation.getId()).orElse(null);
         assertNotNull(vac1);
 
-        vacationRepository.deleteById(4L);
+        vacationRepository.deleteById(vacation.getId());
 
-        assertFalse(vacationRepository.findById(4L).isPresent());
+        assertFalse(vacationRepository.findById(vacation.getId()).isPresent());
     }
 }

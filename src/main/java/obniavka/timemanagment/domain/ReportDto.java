@@ -29,4 +29,7 @@ public class ReportDto {
     private String description;
 
     private UserDto user;
+    private TaskDto task;
+    private LocalTime amountOfHours;
+    private Double totalSalary;
 }

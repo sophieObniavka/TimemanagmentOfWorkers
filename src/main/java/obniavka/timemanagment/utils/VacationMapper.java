@@ -25,10 +25,16 @@ public interface VacationMapper {
     @Mapping(target = "vacations", ignore = true)
     @Mapping(target = "reports", ignore = true)
     @Mapping(target = "sickLeaves", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "assignments", ignore = true)
+    @Mapping(target = "invoices", ignore = true)
     UserDto map(final User user);
 
     @Mapping(target = "vacations", ignore = true)
     @Mapping(target = "reports", ignore = true)
     @Mapping(target = "sickLeaves", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "assignments", ignore = true)
+    @Mapping(target = "invoices", ignore = true)
     User map(UserDto userDto);
 }

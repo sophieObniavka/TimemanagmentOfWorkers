@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <script th:src="@{/js/reject.js}" type="text/javascript"></script>
 
-<form th:object="${current}">
     <head th:replace="fragments/header" style="margin-top: 0px">
 
         <title th:text="#{USER.ADMIN}"></title>
     </head>
-</form>
-    <body  style="margin-top: 0px;">
+
+    <body  style="background-color: transparent">
 
     <div th:replace="fragments/menuTabs :: menuTabs">
     </div>
 
     <div th:replace="fragments/menuTabs :: tabs('/admin/vacations/active','/admin/vacations/closed')"></div>
 
-    <div id="content2" style="margin-left: 190px;height: 84vh;">
+    <div id="content2" style="margin-left: 190px;overflow: auto;">
 
 
         <div class="col-lg-12" >
@@ -24,14 +23,14 @@
 
                         <thead>
                         <tr style="background-color: white">
-                            <th th:text="#{USER}"><span></span></th>
-                            <th th:text="#{VACATION.CREATED}"><span></span></th>
-                            <th th:text="#{VACATION.BEGIN}"><span></span></th>
-                            <th th:text="#{VACATION.END}"><span></span></th>
-                            <th th:text="#{AMOUNTOfDAYS}"><span></span></th>
-                            <th th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
-                            <th th:text="#{VACATION.DAYS.LEFT}" ><span>Amount of days left</span></th>
-                            <th  th:text="#{USER.ACTION}"><span></span></th>
+                            <th scope="col" th:text="#{USER}"><span></span></th>
+                            <th scope="col" th:text="#{VACATION.CREATED}"><span></span></th>
+                            <th scope="col" th:text="#{VACATION.BEGIN}"><span></span></th>
+                            <th scope="col" th:text="#{VACATION.END}"><span></span></th>
+                            <th scope="col" th:text="#{AMOUNTOfDAYS}"><span></span></th>
+                            <th scope="col" th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
+                            <th scope="col" th:text="#{VACATION.DAYS.LEFT}" ><span>Amount of days left</span></th>
+                            <th scope="col" th:text="#{USER.ACTION}"><span></span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -42,7 +41,6 @@
                             <td>
                                 <img th:src="@{'data:image/**;charset=utf-8;base64,'+ ${v.user.convertedImage}}" alt="profile Image">
                                 <a th:href="@{/admin/users/profile/{id}(id = ${v.user.id})}" class="user-link" th:text="''+ ${v.user.firstName} + ' '+ ${v.user.lastName} + ''"  ></a>
-                                <span class="user-subhead" th:text=" #{${v.user.role}}"></span>
                             </td>
                             <td th:field="${v.created}" th:text="${v.created}">
                             </td>
@@ -60,13 +58,13 @@
                                 <span class="label label-default" th:text="${v.user.vacationDays}"></span>
                             </td>
 
-                            <td style="width: 14%;">
+                            <td style="width: 10%;">
 
                                 <form id="confirmForm" th:action="@{/admin/vacation/{id}(id=${v.id})}" method="post">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<!--                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
                                 </form>
 
-                                <a th:href="@{/admin/vacation/{id}(id = ${v.id})}" th:data-longDescription = "#{VACATION.CONFIRM}" onclick="event.preventDefault(); confirmAction(this.getAttribute('data-longDescription'));" class="table-link" style="margin-right: 20px" th:method="post"><span class="fa-stack" style="color: #34d1be;"><i class="fa fa-check-circle"></i></span>
+                                <a th:href="@{/admin/vacation/{id}(id = ${v.id})}" th:data-longDescription = "#{VACATION.CONFIRM}" onclick="event.preventDefault(); confirmAction(this.getAttribute('data-longDescription'));" class="table-link" style="" th:method="post"><span class="fa-stack" style="color: #34d1be;"><i class="fa fa-check-circle"></i></span>
                                 </a>
                                 <a  href="#" class="table-link" data-toggle="tooltip" title="" data-original-title="Edit"  th:data-link = "'/admin/vacation/reject/'" th:data-longDescription = "${v.id}" onclick="reject(this.getAttribute('data-longDescription'),this.getAttribute('data-link') )" ><span class="fa-stack" style="color: red;">
                     <i class="fa fa-ban"></i>

@@ -28,7 +28,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login(Model model, @RequestParam(required = false) String username, @RequestParam(required = false) String error, @RequestParam(required = false) String logout){
-       // userService.updatePassword("sofiia", 4L);
 
         model.addAttribute(TITLE, "Login - Page");
         model.addAttribute(USERNAME, username);

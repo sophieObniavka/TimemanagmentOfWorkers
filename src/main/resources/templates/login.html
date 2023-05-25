@@ -7,10 +7,7 @@
 </head>
 <body>
 <form th:action="@{/doLogin}" method="post">
-    <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid username or
-            password.</div>
-    </div>
+
     <div class="container">
         <header>
             <h1>
@@ -35,7 +32,10 @@
             <div class="text-center">
                 <button class="submit" name="login-submit" id="login-submit"  value="Log In"  th:text="#{LOGIN.BUTTON}"></button>
             </div>
-
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">Invalid username or
+                password.</div>
+        </div>
     </div>
 </form>
 

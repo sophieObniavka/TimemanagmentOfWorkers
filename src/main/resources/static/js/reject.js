@@ -1,6 +1,6 @@
 function reject(id, link){
     document.getElementById("rejectModal").style.display = "block";
-    document.getElementById("rejectForm").setAttribute("action", link + id);
+    document.getElementById("inputForm").setAttribute("action", link + id);
 
 }
 function closeReject() {

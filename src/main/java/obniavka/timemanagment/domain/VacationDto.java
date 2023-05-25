@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Builder(toBuilder = true)
 @Data
@@ -39,5 +40,11 @@ public class VacationDto {
     private String comment;
 
     private Integer amountOfDays;
+
+    public String fullCreatedTime(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return created.format(formatter);
+    }
+
 
 }

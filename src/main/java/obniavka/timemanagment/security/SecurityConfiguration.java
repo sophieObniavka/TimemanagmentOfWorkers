@@ -42,10 +42,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, UserDetailsService userDetailsService) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/image/**").permitAll()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/styles/**").permitAll()
-                .antMatchers("/login/**").permitAll()
+               // .antMatchers("/image/**").permitAll()
+                .antMatchers("/image/**", "/convert", "/js/**", "/styles/**", "/login/**").permitAll()
+                .antMatchers("/test").permitAll()
+              //  .antMatchers("/js/**").permitAll()
+               // .antMatchers("/styles/**").permitAll()
+              //  .antMatchers("/login/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
                 .formLogin()
@@ -62,10 +64,18 @@ public class SecurityConfiguration {
                 .and()
                 .rememberMe().userDetailsService(userDetailsService)
                 .key("uniqueAndSecret")
-                ;
+                .and()
+                .headers()
+                .contentTypeOptions()
+                .disable()
+                .and()
+                .csrf().disable();
+
 
         return http.build();
     }
+
+
 
 }
 

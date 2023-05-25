@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 public class VacationService {
     private final VacationRepository vacationRepository;
-AmountOfDays amountOfDays = new AmountOfDays();
+
     public VacationService(VacationRepository vacationRepository) {
         this.vacationRepository = vacationRepository;
     }
@@ -46,7 +46,7 @@ AmountOfDays amountOfDays = new AmountOfDays();
         Page<VacationDto> vacations = vacationRepository.findAllVacationByBeingNotConfirmedYet(pageable).map(vacationMapper::map);
 
         vacations.forEach(v -> v.getUser().setConvertedImage(Base64.getEncoder().encodeToString(v.getUser().getImageUrl())));
-        vacations.forEach(v-> v.setAmountOfDays(amountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
+        vacations.forEach(v-> v.setAmountOfDays(AmountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
         return vacations;
     }
 
@@ -54,14 +54,14 @@ AmountOfDays amountOfDays = new AmountOfDays();
         Page<VacationDto> vacations = vacationRepository.findAllVacationByBeingConfirmed(pageable).map(vacationMapper::map);
 
         vacations.forEach(v -> v.getUser().setConvertedImage(Base64.getEncoder().encodeToString(v.getUser().getImageUrl())));
-        vacations.forEach(v-> v.setAmountOfDays(amountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
+        vacations.forEach(v-> v.setAmountOfDays(AmountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
         return vacations;
     }
 
     public Page<VacationDto> findAllVacationsByUser(final UserDto userDto, Pageable pageable){
         Page<VacationDto> vacations = vacationRepository.findAllVacationByUserOrderByCreatedDesc(userMapper.map(userDto), pageable).map(vacationMapper::map);
 
-        vacations.forEach(v-> v.setAmountOfDays(amountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
+        vacations.forEach(v-> v.setAmountOfDays(AmountOfDays.getWorkingDaysBetweenTwoDates(v.getBegin(), v.getEnd())));
         return vacations;
     }
 

@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/header" th:object="${current}">
+<head th:replace="fragments/header">
     <meta charset="UTF-8">
     <title>Vacation</title>
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
 </head>
 
-<body  style="margin-top: 0px">
+<body style="background-color: transparent">
 
-<div id="content2" style="margin-left: 30px;margin-top:5px;height: 89vh;">
+<div id="content2">
 
 
     <div class="col-lg-12" >
         <div class="main-box clearfix">
             <div class="table-responsive" >
-                <div class="container mb-2" style="display: flex;
+                <div class="container mt-4 mb-4" style="display: flex;
   justify-content: center">
 
                     <button class="button-34" role="button" th:text="#{VACATION.APPLY}" onclick="openModalToSaveVacation()"></button>
                     <div th:replace="fragments/vacation :: container(${vacation})"></div>
 
                 </div>
-                <table class="table user-list" width="100%">
+                <table class="table user-list" style="width: 80%; margin-left: 150px" >
 
                     <thead>
                     <tr style="background-color: white">
@@ -40,7 +41,7 @@
                         <td colspan="8" th:text="#{NODATA}"></td>
                     </tr>
                     <tr th:each="v : ${vacations}">
-                        <td th:field="${v.created}" th:text="${v.created}">
+                        <td th:field="${v.created}" th:text="${v.fullCreatedTime()}">
                         </td>
                         <td th:field="${v.begin}" th:text="${v.begin}" >
                         </td>
@@ -51,7 +52,7 @@
                         <td th:field="${v.atOwnExpense}" th:text="#{${v.atOwnExpense}}">
                         </td>
 
-                        <td style="width: 14%;">
+                        <td style="">
                             <div th:if="${v.confirmed == null}"  class="badge badge-warning ml-2" th:text="#{UNDERCONSIDERATION}"/>
                             <div th:if="${v.confirmed}"  class="badge badge-success ml-2" th:text="#{CONFIRMED}"/>
                             <div th:if="${v.confirmed != null && !v.confirmed}" class="badge badge-danger ml-2" th:text="#{REJECT}"/>

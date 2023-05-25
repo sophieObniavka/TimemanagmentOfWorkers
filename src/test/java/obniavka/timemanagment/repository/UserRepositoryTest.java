@@ -17,13 +17,13 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    private User user;
     @BeforeEach
     public void initEach(){
-        User user = userRepository.save(User.builder()
+        user = userRepository.save(User.builder()
                 .id(4L)
                 .firstName("Anna")
                 .lastName("Hey")
-                .employeeId("TT1934")
                 .country("Ukraine")
                 .city("Lviv")
                 .street("Some")
@@ -40,7 +40,7 @@ public class UserRepositoryTest {
         user1.setLastName("Brzoskwinia");
         user1.setId(2L);
         user1.setEmail("example@gmail.com");
-        user1.setEmployeeId("ID1234");
+
 
         userRepository.save(user1);
     }
@@ -53,7 +53,6 @@ public class UserRepositoryTest {
         user.setId(1L);
         user.setFirstName("John");
         user.setLastName("Monty");
-        user.setEmployeeId("100123");
         user.setEmail("john@example.com");
         user.setPassword("password");
         user.setImageUrl("default.jpg".getBytes());
@@ -71,7 +70,6 @@ public class UserRepositoryTest {
         assertNotNull(saveUser.getId());
         assertNotNull(saveUser.getFirstName());
         assertNotNull(saveUser.getLastName());
-        assertNotNull(saveUser.getEmployeeId());
         assertNotNull(saveUser.getEmail());
         assertNotNull(saveUser.getPassword());
         assertNotNull(saveUser.getImageUrl());
@@ -95,8 +93,6 @@ public class UserRepositoryTest {
         System.out.println(user.getId());
 
         assertNotNull(user);
-
-        System.out.println(user.getId());
         User userRes = userRepository.findById(user.getId()).get();
         assertNotNull(userRes);
     }
@@ -110,12 +106,12 @@ public class UserRepositoryTest {
     @Test
     @DisplayName("delete user by id")
     void testDeleteUserById(){
-       User user1 = userRepository.findById(4L).get();
+       User user1 = userRepository.findById(user.getId()).get();
 
        assertNotNull(user1);
 
        userRepository.deleteById(user1.getId());
 
-       assertFalse(userRepository.findById(4L).isPresent());
+       assertFalse(userRepository.findById(user.getId()).isPresent());
     }
 }

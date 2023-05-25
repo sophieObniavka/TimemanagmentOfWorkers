@@ -18,13 +18,13 @@
         <title th:text="#{USER.ADMIN}"></title>
     </head>
 </form>
-<body  style="margin-top: 0px">
+<body  style="background-color: transparent">
 
 <div th:replace="fragments/menuTabs :: menuTabs">
 </div>
 
 <div th:replace="fragments/menuTabs :: tabs('/admin/sickleaves/active','/admin/sickleaves/closed')"></div>
-<div id="content2" style="margin-left: 190px;height: 84vh;">
+<div id="content2" style="margin-left: 190px;overflow: auto;">
 
     <!--    587px-->
     <div class="col-lg-12" >
@@ -34,14 +34,13 @@
 
                     <thead>
                     <tr style="background-color: white">
-                        <th scope="col" th:text="#{USER}"><span></span></th>
+                        <th th:text="#{USER}"><span></span></th>
                         <th scope="col" th:text="#{VACATION.CREATED}"><span></span></th>
                         <th scope="col" th:text="#{VACATION.BEGIN}"><span></span></th>
                         <th scope="col" th:text="#{VACATION.END}"><span></span></th>
                         <th scope="col" th:text="#{AMOUNTOfDAYS}"><span></span></th>
                         <th scope="col" th:text="#{REPORT.DESCRIPTION}"><span></span></th>
                         <th scope="col" th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
-                        <th scope="col" th:text="#{SICKLEAVE.DAYS.LEFT}" ><span></span></th>
                         <th  scope="col" th:text="#{STATUS}"><span></span></th>
                         <th  scope="col" th:text="#{CHECKER}"><span></span></th>
                     </tr>
@@ -70,9 +69,7 @@
                         <td class="text-center">
                             <span class="label label-default" th:text="#{${s.atOwnExpense}}"></span>
                         </td>
-                        <td class="text-center">
-                            <span class="label label-default" th:text="${s.user.vacationDays}"></span>
-                        </td>
+
 
                         <td style="width: 14%;">
                             <div th:if="${s.confirmed}"  class="badge badge-success ml-2" th:text="#{CONFIRMED}"/>

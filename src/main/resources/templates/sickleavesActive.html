@@ -18,14 +18,14 @@
         <title th:text="#{USER.ADMIN}"></title>
     </head>
 </form>
-<body  style="margin-top: 0px;">
+<body  style="background-color: transparent">
 
 <div th:replace="fragments/menuTabs :: menuTabs">
 </div>
 
 <div th:replace="fragments/menuTabs :: tabs('/admin/sickleaves/active','/admin/sickleaves/closed')"></div>
 
-<div id="content2" style="margin-left: 190px;height: 84vh;">
+<div id="content2" style="margin-left: 190px;overflow: auto;">
 
 
     <div class="col-lg-12" >
@@ -73,7 +73,7 @@
                             <span class="label label-default" th:text="${s.user.vacationDays}"></span>
                         </td>
 
-                        <td style="width: 14%;">
+                        <td style="width: 10%;">
 
                             <form id="confirmForm" th:action="@{/admin/sickleave/{id}(id=${s.id})}" method="post">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

@@ -1,10 +1,7 @@
 package obniavka.timemanagment.utils;
 
 import obniavka.timemanagment.data.User;
-import obniavka.timemanagment.domain.ReportDto;
-import obniavka.timemanagment.domain.SickLeaveDto;
-import obniavka.timemanagment.domain.UserDto;
-import obniavka.timemanagment.domain.VacationDto;
+import obniavka.timemanagment.domain.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +20,13 @@ public class UserMapperTest {
         VacationDto vacationDto = new VacationDto();
         ReportDto reportDto = new ReportDto();
         SickLeaveDto sickLeaveDto = new SickLeaveDto();
+        TaskDto taskDto = new TaskDto();
+        AssignmentDto assignmentDto = new AssignmentDto();
+        InvoiceDto invoiceDto = new InvoiceDto();
+
+        invoiceDto.setId(1L);
+        invoiceDto.setPdfData(new byte[]{1,2,44,63,2});
+        invoiceDto.setUser(userDto);
 
         vacationDto.setId(1L);
         vacationDto.setBegin(LocalDate.of(2022, Month.AUGUST, 24));
@@ -47,11 +51,24 @@ public class UserMapperTest {
         sickLeaveDto.setDescription("I am very sick");
         sickLeaveDto.setUser(userDto);
 
+        taskDto.setId(1L);
+        taskDto.setName("Create project");
+        taskDto.setDescription("Start Intellij Idea");
+        taskDto.setDeadline(LocalDate.of(2023, Month.AUGUST, 30));
+        taskDto.setUser(userDto);
+
+        assignmentDto.setId(1L);
+        assignmentDto.setBegin(LocalDate.of(2023, Month.JUNE, 11));
+        assignmentDto.setEnd(LocalDate.of(2023, Month.JUNE, 21));
+        assignmentDto.setCountry("Ukraine");
+        assignmentDto.setCity("Lviv");
+        assignmentDto.setDescription("Project where you have to be placed");
+        assignmentDto.setUsers(Set.of(userDto));
+
         userDto.setId(2L);
         userDto.setCity("New York");
         userDto.setCountry("USA");
         userDto.setEmail("blala@example.com");
-        userDto.setEmployeeId("TT27Uk");
         userDto.setFirstName("John");
         userDto.setHouseNumber("3a");
         userDto.setImageUrl(new byte[]{1,55,3});
@@ -64,12 +81,21 @@ public class UserMapperTest {
         userDto.setVacationDays(30);
         userDto.setSickleaveDays(30);
         userDto.setSalaryPerHour(20);
-        userDto.setPasswordExpired(false);
+        userDto.setPosition("Developer");
+        userDto.setPatronymic("Bohdanovych");
+        userDto.setTaxNumber("1234133");
+        userDto.setAccount("3243314342114153");
+        userDto.setBeneficiaryBank("PRIVAT");
+        userDto.setSwiftCode("XX83YU");
+        userDto.setCurrency("EUR");
         userDto.setBirth(LocalDate.of(1999, Month.AUGUST, 22));
         userDto.setHired(LocalDate.of(2022, Month.APRIL, 10));
         userDto.setVacations(Set.of(vacationDto));
         userDto.setReports(Set.of(reportDto));
         userDto.setSickLeaves(Set.of(sickLeaveDto));
+        userDto.setTasks(Set.of(taskDto));
+        userDto.setAssignments(Set.of(assignmentDto));
+        userDto.setInvoices(Set.of(invoiceDto));
 
 
         User user = UserMapper.MAPPER.map(userDto);
@@ -78,6 +104,10 @@ public class UserMapperTest {
         Assertions.assertEquals(1, user.getVacations().size());
         Assertions.assertEquals(1, user.getReports().size());
         Assertions.assertEquals(1, user.getSickLeaves().size());
+        Assertions.assertEquals(1, user.getTasks().size());
+        Assertions.assertEquals(1, user.getAssignments().size());
+        Assertions.assertEquals(1, user.getInvoices().size());
         Assertions.assertEquals("ROLE_ADMIN", user.getRole());
+        Assertions.assertEquals(userDto.getPosition(), user.getPosition());
     }
 }

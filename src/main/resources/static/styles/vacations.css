@@ -9,15 +9,20 @@
 /*}*/
 
 
-html,body{
+html{
     margin-top: 20px;
     background: rgb(2, 0, 36);
-    background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(56, 209, 240, 1) 0%, rgba(9, 9, 121, 1) 70%, rgba(99, 38, 115, 1) 100%);
+    background: linear-gradient(45deg, #49a09d, #5f2c82);;
     background-repeat: no-repeat;
     margin: 0;
     padding: 0;
     width: 100%;
+    min-height: 100%;
 
+}
+
+body{
+    background-color: transparent;
 }
 
 
@@ -44,6 +49,7 @@ html,body{
 
 .table{
     border-collapse: collapse;
+    border-color: transparent;
     overflow: hidden;
     width: 100%;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -124,8 +130,8 @@ html,body{
     line-height: 1.2;
 }
 .table a.table-link {
-    margin: 0 5px;
-    font-size: 1.125em;
+    margin: 0 0px;
+    font-size: 1.1em;
 }
 .table a.table-link:hover {
     text-decoration: none;

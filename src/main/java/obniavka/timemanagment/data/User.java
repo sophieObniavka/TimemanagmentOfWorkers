@@ -1,11 +1,13 @@
 package obniavka.timemanagment.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 
+import java.util.Objects;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -24,11 +26,12 @@ public class User {
     @Column
     private String lastName;
     @Column
+    private String patronymic;
+    @Column
     private LocalDate birth;
     @Column
     private LocalDate hired;
-    @Column
-    private String employeeId;
+
     @Column
     private String phoneNumber;
     @Column
@@ -48,6 +51,18 @@ public class User {
     @Column
     private String role;
     @Column
+    private String position;
+    @Column
+    private String taxNumber;
+    @Column
+    private String account;
+    @Column
+    private String beneficiaryBank;
+    @Column
+    private String swiftCode;
+    @Column
+    private String currency;
+    @Column
     private Integer vacationDays;
     @Column
     private Integer sickleaveDays;
@@ -55,10 +70,6 @@ public class User {
     private Integer salaryPerHour;
     @Column
     private String password;
-
-    @Column(nullable = false)
-    private LocalDate passwordExpires;
-
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @ToString.Exclude
@@ -72,6 +83,27 @@ public class User {
     @ToString.Exclude
     private Set<SickLeave> sickLeaves = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Task> tasks = new HashSet<>();
 
+@ManyToMany(mappedBy = "users")
+    private Set<Assignment> assignments = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Invoice> invoices = new HashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

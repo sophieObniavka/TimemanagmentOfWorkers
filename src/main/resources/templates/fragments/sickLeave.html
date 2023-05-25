@@ -1,78 +1,34 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<link th:href="@{/styles/vacation.css}" rel="stylesheet" />
-<script th:src="@{/js/modalDialogAction.js}" type="text/javascript"></script>
-<script th:src="@{/js/checkDates.js}" type="text/javascript"></script>
-<head>
-
-</head>
-<body>
 <div id="sickLeaveModal" class="modal" tabindex="-1" th:fragment="container(sickleave)">
 
-    <div class="modal-dialog" style="top: 100px">
+    <div class="modal-dialog" id="modalD">
 
         <!-- Modal content-->
-        <div class="modal-content" style="width: 285px">
-            <div class="modal-header" style="background-color: black">
-                <h4 class="modal-title" style="color: white" th:text="#{USER.SICKLEAVE}"></h4>
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header" id="modalHeader" >
+                <h4 class="modal-title" th:text="#{USER.SICKLEAVE}"></h4>
                 <span class="close" th:onclick="'closeSickLeaveModal()'">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="inputSickleaveForm" th:action="action" class="mr-0" method="post" th:object="${sickleave}" style="justify-content: center">
-                    <span class="badge badge-info" style="width: 100%" th:field="${left}" id="left" th:text="#{SICKLEAVE.DAYS.LEFT} + ': '+ ${left}"></span>
+                <form id="inputForm" th:action="@{/sickleaves}" class="mr-0" method="post" th:object="${sickleave}" >
+                    <span class="badge badge-info" style="width: 100%" th:field="${left}" id="leftSL" th:text="#{SICKLEAVE.DAYS.LEFT} + ': '+ ${left}"></span>
                     <div class="col-md-6" style="width: 100%">
                         <ul  class="list-unstyled" style="width: 100%" >
 
                             <input class="mr-20" id="sId" th:name="id" th:field="*{id}" hidden="true" readonly>
 
-                            <li style="height: 60px">
-                                <label class="mb-0" th:text="#{VACATION.BEGIN}" ></label>
-                                <input class="mr-20" type="date" id="sickleaveBegin" th:name="name" th:field="*{begin}" style="width: 203px" required>
+                            <li th:replace="fragments/fields::inputField(begin, sickleaveBegin,date, 'VACATION.BEGIN')"></li>
 
-                            </li>
-                            <li style="height: 60px" class="mt-1" >
-                                <label class=" mb-0" th:text="#{VACATION.END}"></label>
-                                <input  class="ml-20" id="sickleaveEnd" type="date" th:name="end" th:field="*{end}" style="width: 203px" required>
+                            <li th:replace="fragments/fields::inputField(end, sickleaveEnd,date, 'VACATION.END')"></li>
+                            <li th:replace="fragments/fields::inputDescriptionField(description, sickleaveDescription, 'REPORT.DESCRIPTION')"></li>
+                            <li th:replace="fragments/fields::checkBoxField(sickLeaveAtOwn)"></li>
 
-                            </li>
-                            <li class="mt-1">
-
-                                <label class="mb-0" th:text="#{REPORT.DESCRIPTION}"></label>
-
-                                <textarea  id="sickleaveDescription" th:name="description" th:field="*{description}" style="width: 203px; height: 60px" required />
-
-                            </li>
-                            <li style="height: 60px" class="mt-1 ml-5px" >
-                                <div class="row" style="width: 203px">
-                                    <div class="flex-column" >
-                                        <input class="ml-2"  type="checkbox"  id="sickLeaveAtOwn" th:field="*{atOwnExpense}" >
-                                    </div>
-                                    <div class="flex-column">
-                                        <label class=" mb-0" th:text="#{VACATION.ATOWNEXPENSE}"></label>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <span id = "badDate" style="color:red; width: 203px"> </span> <br><br>
-
-
-                            <button  id="saveButton"  style="width: 200px; height: 50px; background-color: black; color: white; justify-content: center" th:data-longDescription = "#{BADDATE}" th:data-description = "#{DAYS.LIMIT}" onclick="return checkDates(this.getAttribute('data-longDescription'), this.getAttribute('data-description'))"><h3 th:text="#{REPORT.SAVE}"></h3></button>
-
+                            <h7 id = "badDateSL" style="display: block; width: 209px; color: red;"> </h7> <br><br>
+                            <button  id="saveButton"   th:data-longDescription = "#{BADDATE}" th:data-description = "#{DAYS.LIMIT}" onclick="return checkDates(this.getAttribute('data-longDescription'), this.getAttribute('data-description'),'sickleaveBegin','sickleaveEnd','sickLeaveAtOwn', 'badDateSL','leftSL')"><h3 th:text="#{REPORT.SAVE}"></h3></button>
                         </ul>
                     </div>
-
-
-
-
                 </form>
             </div>
         </div>
 
     </div>
 </div>
-
-</body>
-
-
-
-</html>

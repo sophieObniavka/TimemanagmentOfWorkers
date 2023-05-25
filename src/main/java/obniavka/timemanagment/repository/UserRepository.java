@@ -1,45 +1,47 @@
 package obniavka.timemanagment.repository;
 
+import obniavka.timemanagment.data.Assignment;
 import obniavka.timemanagment.data.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-@Transactional
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     public Optional<User> findUserByEmail(String email);
 
-    @Modifying
-    @Query("update User u set u.firstName = :firstName, u.lastName = :lastName, u.birth = :birth, u.hired = :hired, u.phoneNumber = :phoneNumber, u.employeeId = :employeeId, u.role = :role, u.country = :country, u.city = :city, u.street = :street, u.houseNumber = :houseNumber, u.postCode = :postCode, u.email = :email, u.imageUrl = :imageUrl, u.vacationDays = :vacationDays, u.sickleaveDays = :sickleaveDays, u.salaryPerHour = :salaryPerHour where u.id = :id")
-    void updateUser(@Param(value = "id") Long id,
-                    @Param(value = "firstName") String firstName,
-                    @Param(value = "lastName") String lastName,
-                    @Param(value = "birth") LocalDate birth,
-                    @Param(value = "hired") LocalDate hired,
-                    @Param(value = "phoneNumber") String phoneNumber,
-                    @Param(value = "employeeId") String employeeId,
-                    @Param(value = "role") String role,
-                    @Param(value = "country") String country,
-                    @Param(value = "city") String city,
-                    @Param(value = "street") String street,
-                    @Param(value = "houseNumber") String houseNumber,
-                    @Param(value = "postCode") String postCode,
-                    @Param(value = "email") String email,
-                    @Param(value = "imageUrl") byte[] imageUrl,
-                     @Param(value = "vacationDays") Integer vacationDays,
-                     @Param(value = "sickleaveDays") Integer sickleaveDays,
-                     @Param(value = "salaryPerHour") Integer salaryPerHour);
 
+    @Query("select u from User u")
+    @Override
+    Page<User> findAll(Pageable pageable);
+
+
+    @Query("select u from User u where upper(u.firstName) like upper(concat('%', :keyword, '%')) or " +
+            "upper(u.lastName) like upper(concat('%', :keyword, '%')) or " +
+            "upper(u.email) like upper(concat('%', :keyword, '%')) or " +
+            "upper(u.country) like upper(concat('%', :keyword, '%')) or " +
+            "upper(u.city) like upper(concat('%', :keyword, '%')) or " +
+            "upper(u.street) like upper(concat('%', :keyword, '%')) or " +
+            "upper(u.position) like upper(concat('%', :keyword, '%'))")
+    Page<User> findUserByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     @Modifying
     @Query("update User u set u.password = :password where u.id = :id")
     void updateUserPassword(@Param(value = "password") String password, @Param(value = "id") Long id);
+
+   @Transactional
+    @Modifying
+    @Query("update User u set u.assignments = :assignments where u.id = :userId")
+    void updateAssignments(@Param("assignments") Set<Assignment> assignments, @Param("userId") Long userId);
 
 }

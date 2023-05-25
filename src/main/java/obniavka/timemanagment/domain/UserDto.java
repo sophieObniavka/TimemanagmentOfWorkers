@@ -1,7 +1,9 @@
 package obniavka.timemanagment.domain;
 
 import lombok.*;
+import obniavka.timemanagment.helper.Transliteration;
 import obniavka.timemanagment.validation.DateConstraint;
+import obniavka.timemanagment.validation.PasswordConstraint;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
+@PasswordConstraint
 public class UserDto implements UserDetails {
 
     private Long id;
@@ -33,6 +36,30 @@ public class UserDto implements UserDetails {
     private String lastName;
 
     @NotNull
+    @NotEmpty(message = "{USER.PATRONYMIC.REQUIRED}")
+    private String patronymic;
+
+    @NotNull
+    @NotEmpty(message = "{USER.TAXNUMBER.REQUIRED}")
+    private String taxNumber;
+
+    @NotNull
+    @NotEmpty(message = "{USER.ACCOUNT.REQUIRED}")
+    private String account;
+
+    @NotNull
+    @NotEmpty(message = "{USER.BENEFICIARYBANK.REQUIRED}")
+    private String beneficiaryBank;
+
+    @NotNull
+    @NotEmpty(message = "{USER.SWIFTCODE.REQUIRED}")
+    private String swiftCode;
+
+    @NotNull
+    @NotEmpty(message = "{USER.CURRENCY.REQUIRED}")
+    private String currency;
+
+    @NotNull
     @DateConstraint
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
@@ -40,10 +67,6 @@ public class UserDto implements UserDetails {
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate hired;
-
-    @NotNull
-    @NotEmpty(message = "{USER.EMPLOYEEID.REQUIRED}")
-    private String employeeId;
 
     @NotNull
     @NotEmpty(message = "{USER.PHONENUMBER.REQUIRED}")
@@ -86,12 +109,22 @@ public class UserDto implements UserDetails {
     @NotNull
     @NotEmpty(message = "{USER.ROLE.REQUIRED}")
     private String role;
-    @NotNull
-    @NotEmpty(message = "{USER.PASSWORD.REQUIRED}")
+
     private String password;
 
     private String convertedImage;
-    private boolean passwordExpired;
+
+    private Integer takenVacations;
+
+    private Integer vacationsAtOwnExpense;
+
+    private Integer takenSickLeaves;
+
+    private Integer sickLeavesAtOwnExpense;
+
+    @NotNull
+    @NotEmpty(message = "{USER.POSITION.REQUIRED}")
+    private String position;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -135,6 +168,33 @@ public class UserDto implements UserDetails {
     @ToString.Exclude
     private Set<SickLeaveDto> sickLeaves = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<TaskDto> tasks = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<AssignmentDto> assignments = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<InvoiceDto> invoices = new HashSet<>();
+
+    public String fullName(){
+       return this.firstName + " " + this.lastName;
+    }
+
+    public String fullAddress(){
+        return this.country + ", " + this.city;
+    }
+
+    public UserDto translate(){
+        return new UserDto().toBuilder()
+                .firstName(Transliteration.transliterate(firstName))
+                .lastName(Transliteration.transliterate(lastName))
+                .patronymic(Transliteration.transliterate(patronymic))
+                .city(Transliteration.transliterate(city))
+                .street(Transliteration.transliterate(street)).build();
+
+    }
 }

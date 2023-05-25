@@ -1,9 +1,9 @@
 
-<nav class="main-menu" style="margin-top: 96px; height: 89vh" xmlns:th="http://www.thymeleaf.org" th:fragment="menuTabs">
+<nav class="main-menu" style="margin-top: 96px; height: auto" xmlns:th="http://www.thymeleaf.org" th:fragment="menuTabs">
 
     <ul>
-        <li th:each="tab : ${tabsMenu}" th:class="'has-subnav ' + ${tab.active ? 'active' : ''}" style="margin-left: 0px">
-            <a th:href="${tab.getRequestUrl()}">
+        <li th:each="tab : ${tabsMenu}" th:class="'has-subnav ' + ${#request.requestURI.contains(tab.getRequestUrl().substring(0,10)) ? 'active':''}" style="margin-left: 0px">
+            <a th:href="${tab.getRequestUrl()}" >
                 <i th:class="${tab.getIcon()}" ></i>
                 <span class="nav-text" th:text="#{${tab.getName()}}"></span>
             </a>
@@ -11,13 +11,18 @@
     </ul>
 </nav>
 
-<ul class="nav nav-tabs"  xmlns:th="http://www.thymeleaf.org" th:fragment="tabs(firstLink, secondLink)" style="margin-left: 190px; background-color: black; color: white">
-    <li class="nav-item" th:style="'background-color: ' + ${colorActive}">
-        <a class="nav-link" th:href="@{${firstLink}}"  th:text="#{ACTIVE}" style="color: white"></a>
-    </li>
-    <li class="nav-item" th:style="'background-color: ' + ${colorClosed}">
-        <a class="nav-link"  th:href="@{${secondLink}}" style="color: white" th:text="#{CLOSED}"></a>
+<ul class="nav nav-tabs" style="margin-left: 0; height:50px; background-color: black; color: white" th:fragment="profileTabs(id)">
+    <li th:each="tab : ${tabsProfile}" class="nav-item" th:style="${#request.requestURI.contains(tab.getRequestUrl()) ? ' box-shadow: 0 15px 60px rgba(255, 255, 255, 0.5);border: 1px solid white;':''}" style="height: 50px">
+        <a class="nav-link" th:href="${tab.getRequestUrl() + id}"  th:text="#{INFO}" style="color: white;"></a>
     </li>
 </ul>
 
+<ul class="nav nav-tabs"  xmlns:th="http://www.thymeleaf.org" th:fragment="tabs(firstLink, secondLink)" style="margin-left: 190px; background-color: black; color: white">
+    <li class="nav-item" th:style="'background-color: ' + ${#request.requestURI.contains('active') ? '#632673':'black'}">
+        <a class="nav-link" th:href="@{${firstLink}}"  th:text="#{ACTIVE}" style="color: white"></a>
+    </li>
+    <li class="nav-item" th:style="'background-color: ' + ${#request.requestURI.contains('closed') ? '#632673':'black'}">
+        <a class="nav-link"  th:href="@{${secondLink}}" style="color: white" th:text="#{CLOSED}"></a>
+    </li>
+</ul>
 

@@ -10,9 +10,9 @@ import java.util.Locale;
 public class LocalisationConfiguration {
     @Bean
     public AcceptHeaderLocaleResolver localeResolver() {
-        Locale.setDefault(new Locale("ua"));
+        Locale.setDefault(new Locale("uk"));
         final AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
-        acceptHeaderLocaleResolver.setDefaultLocale(Locale.forLanguageTag("ua"));
+        acceptHeaderLocaleResolver.setDefaultLocale(Locale.forLanguageTag("uk"));
 
         return acceptHeaderLocaleResolver;
     }

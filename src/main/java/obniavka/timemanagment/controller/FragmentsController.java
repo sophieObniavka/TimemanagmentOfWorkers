@@ -23,17 +23,19 @@ import java.util.Collection;
 public class FragmentsController {
     private final UserService userService;
 
-    @Autowired
-    private HttpServletRequest request;
 
     public FragmentsController(UserService userService) {
         this.userService = userService;
     }
 
     @ModelAttribute("tabsMenu")
-    public Collection<Tabs> managementTabs() {
-        Tabs.setActiveTab(request.getRequestURI());
+    public Collection<Tabs> menuTabs() {
         return Tabs.listMenuTabs();
+    }
+
+    @ModelAttribute("tabsProfile")
+    public Collection<Tabs> profileTabs() {
+        return Tabs.listProfileTabs();
     }
 
     @ModelAttribute("current")
@@ -53,7 +55,7 @@ public class FragmentsController {
     }
 
     @ModelAttribute("selected")
-    public String setCurrentMonthAndYear(Model model) {
+    public String setCurrentMonthAndYear() {
         return LocalDate.now().getYear() + "-" + String.format("%02d", LocalDate.now().getMonthValue());
     }
 

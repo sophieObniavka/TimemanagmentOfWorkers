@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="fragments/header" style="margin-top: 0px">
+     <title th:text="#{USER.ADMIN}"></title>
+</head>
+
+<body  style="background-color: transparent">
+
+<div th:replace="fragments/menuTabs :: menuTabs">
+</div>
+<link th:href="@{/styles/report.css}" rel="stylesheet" />
+
+<div id="toastContainer" class="position-fixed top-0 end-0 p-3">
+    <!-- Toast -->
+    <div class="toast" th:if="${showToast}">
+        <div class="toast-header">
+            <strong class="me-auto" th:text="#{SUCCESS}">Toast Title</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" th:text="#{SUCCESSFULLY.UPLOADED}"></div>
+    </div>
+</div>
+
+<table class="table-fill" id="tableData" style="margin-left: 220px; margin-top: 10px;">
+    <thead>
+    <tr>
+        <th class="text-left" th:text="#{USER}"></th>
+        <th class="text-left" th:text="#{INVOICE}"></th>
+        <th class="text-left" th:text="#{USER.ACTION}"></th>
+
+    </tr>
+    </thead>
+    <tbody  class="table-hover">
+    <tr th:if="${invoices.isEmpty()}" >
+        <td colspan="5" th:text="#{NODATA}"></td>
+    </tr>
+    <tr th:each="invoice : ${invoices}">
+
+        <td class="text-left" th:text="${invoice.user.fullName()}"></td>
+
+        <td><a th:href="@{/admin/download/{id}(id=${invoice.id})}">Download PDF</a></td>
+
+        <td style="width: 50px; text-align: center;">
+                <a th:href="@{delete/invoice/{id}(id=${invoice.id})}" th:data-longDescription="#{INVOICE.CONFIRM}" onclick="return confirm(this.getAttribute('data-longDescription'));" class="table-link">
+            <span class="fa-stack" style="margin-right: 15px;color: #34d1be;">
+                <i style="margin-right: 5px" class="fa fa-check-circle"></i>
+            </span>
+                </a>
+
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+</div>
+<div class="mt-30" style="margin-top: 30px;">
+    <div th:replace="fragments/Pagination::pagination('/invoices')"></div>
+</div>
+
+</body>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        var toastEl = document.querySelector('.toast');
+        var toast = new bootstrap.Toast(toastEl);
+
+        toastEl.classList.add('bg-success', 'text-white');
+
+        toast.show();
+        setTimeout(function() {
+            toast.hide();
+        }, 10000);
+    });
+</script>
+</html>
