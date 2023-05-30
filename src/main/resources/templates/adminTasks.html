@@ -70,7 +70,7 @@
         </td>
         <td>
             <a  class="text-info" data-toggle="tooltip" title="" data-original-title="Edit" th:data-task-id="${task.id}" th:data-user-id="${task.user.id}" onclick="openTask(this.getAttribute('data-task-id'), this.getAttribute('data-user-id'))"><i class="fas fa-pencil-alt"></i></a>
-            <a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{/task/delete/{id}(id = ${task.id})}" th:data-longDescription = "#{REPORT.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a>
+            <a class="text-danger" data-toggle="tooltip" title="" data-original-title="Delete" th:href="@{/admin/tasks/delete/{id}(id = ${task.id})}" th:data-longDescription = "#{TASK.ACTION.CONFIRMATION}" onclick="return confirm(this.getAttribute('data-longDescription'))"><i class="far fa-trash-alt"></i></a>
         </td>
     </tr>
     </tbody>

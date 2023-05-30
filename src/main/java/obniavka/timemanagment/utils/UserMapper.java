@@ -42,9 +42,11 @@ public interface UserMapper {
     Task map(final TaskDto taskDto);
 
     @Mapping(target = "users", ignore = true)
+    @Mapping(target = "expenses", ignore = true)
     AssignmentDto map(final Assignment assignment);
 
     @Mapping(target = "users", ignore = true)
+    @Mapping(target = "expenses", ignore = true)
     Assignment map(final AssignmentDto assignmentDto);
 
     @Mapping(target = "user", ignore = true)
@@ -52,5 +54,13 @@ public interface UserMapper {
 
     @Mapping(target = "user", ignore = true)
     Invoice map(final InvoiceDto invoiceDto);
+
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "receipts", ignore = true)
+    ExpenseDto map(final Expense expense);
+
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "receipts", ignore = true)
+    Expense map(final ExpenseDto expenseDto);
 
 }

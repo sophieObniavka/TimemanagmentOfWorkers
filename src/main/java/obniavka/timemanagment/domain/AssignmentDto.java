@@ -32,6 +32,10 @@ public class AssignmentDto {
     @ToString.Exclude
     private Set<UserDto> users = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<ExpenseDto> expenses = new HashSet<>();
+
     public String allUsers(){
         return users.stream().map(u->u.fullName()).collect(Collectors.joining(", "));
     }
@@ -40,5 +44,10 @@ public class AssignmentDto {
         return users.stream().map(UserDto::getId).map(Object::toString)
                 .collect(Collectors.joining(" "));
     }
+
+    public double getSumOfPrice(final UserDto userDto){
+        return expenses.stream().filter(e -> e.getUser().equals(userDto)).mapToDouble(ExpenseDto::getPrice).sum();
+    }
+
 
 }

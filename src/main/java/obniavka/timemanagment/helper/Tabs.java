@@ -10,7 +10,8 @@ public enum Tabs {
     INVOICES("/admin/invoices","fa fa-file fa-2x", "USER.INVOICES"),
     TASKS("/admin/tasks","fa fa-book fa-2x", "USER.TASKS" ),
     PROFILE("/admin/users/profile/","","INFO"),
-    ASSIGNMENTS("/admin/assignments", "fa fa-briefcase fa-2x", "USER.ASSIGNMENTS");
+    ASSIGNMENTS("/admin/assignments", "fa fa-briefcase fa-2x", "USER.ASSIGNMENTS"),
+    EXPENSES("/admin/expenses", "fa fa-credit-card fa-2x", "USER.EXPENSES");
 
 
     private final String requestUrl;
@@ -24,7 +25,7 @@ public enum Tabs {
     }
 
     public static Collection<Tabs> listMenuTabs() {
-        return Arrays.asList(REPORTS,VACATIONS,SICKLEAVES,TASKS,ASSIGNMENTS,INVOICES);
+        return Arrays.asList(REPORTS,VACATIONS,SICKLEAVES,TASKS,ASSIGNMENTS,INVOICES, EXPENSES);
     }
     public static Collection<Tabs> listProfileTabs() {
         return Arrays.asList(PROFILE);

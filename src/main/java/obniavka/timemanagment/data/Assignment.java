@@ -31,12 +31,16 @@ public class Assignment {
     @Column
     private String description;
 
-@ManyToMany(cascade = {CascadeType.DETACH}, fetch = FetchType.LAZY)
-@JoinTable(
+    @ManyToMany(cascade = {CascadeType.DETACH}, fetch = FetchType.LAZY)
+    @JoinTable(
         name = "user_assignment",
         joinColumns = @JoinColumn(name = "assignment_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users  = new HashSet<>();
+
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Expense> expenses = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

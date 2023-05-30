@@ -1,6 +1,7 @@
 package obniavka.timemanagment.domain;
 
 import lombok.*;
+import obniavka.timemanagment.data.Currency;
 import obniavka.timemanagment.helper.Transliteration;
 import obniavka.timemanagment.validation.DateConstraint;
 import obniavka.timemanagment.validation.PasswordConstraint;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Builder(toBuilder = true)
 @Data
@@ -57,7 +59,7 @@ public class UserDto implements UserDetails {
 
     @NotNull
     @NotEmpty(message = "{USER.CURRENCY.REQUIRED}")
-    private String currency;
+    private Currency currency;
 
     @NotNull
     @DateConstraint
@@ -179,6 +181,10 @@ public class UserDto implements UserDetails {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<InvoiceDto> invoices = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<ExpenseDto> expenses = new HashSet<>();
 
     public String fullName(){
        return this.firstName + " " + this.lastName;

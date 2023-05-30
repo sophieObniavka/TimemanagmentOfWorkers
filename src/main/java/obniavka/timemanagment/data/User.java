@@ -1,6 +1,5 @@
 package obniavka.timemanagment.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -61,7 +60,7 @@ public class User {
     @Column
     private String swiftCode;
     @Column
-    private String currency;
+    private Currency currency;
     @Column
     private Integer vacationDays;
     @Column
@@ -87,12 +86,16 @@ public class User {
     @ToString.Exclude
     private Set<Task> tasks = new HashSet<>();
 
-@ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users")
     private Set<Assignment> assignments = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @ToString.Exclude
     private Set<Invoice> invoices = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Expense> expenses = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

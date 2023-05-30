@@ -44,4 +44,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User u set u.assignments = :assignments where u.id = :userId")
     void updateAssignments(@Param("assignments") Set<Assignment> assignments, @Param("userId") Long userId);
 
+   @Query("select u from User u where u.assignments.size > 0 AND u.expenses.size > 0")
+   Page<User> findUsersWithExpensesToProcess(Pageable pageable);
 }

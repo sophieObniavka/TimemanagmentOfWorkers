@@ -45,8 +45,6 @@ public class ReportService {
         reportRepository.deleteById(id);
 
     }
-//
-//    public List<ReportDto> fetchAllReportsFromDb() { return mapper.map(reportRepository.findAll());}
 
 
     public List<ReportDto> fetchAllReportsByDateAndUserFromDb(String date, final UserDto userDto) {

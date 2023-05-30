@@ -19,8 +19,6 @@
     <script th:inline="javascript">function verifyPassword(errorMessage) {
         var pw = document.getElementById("passwordNew").value;
         var pR = document.getElementById("passwordRepeat").value;
-
-        //check empty password field
         if(pw !== pR) {
             document.getElementById("message").innerHTML = errorMessage;
             return false;
@@ -121,7 +119,7 @@
 
                             <select name="currency" id="currency"  th:field="*{currency}" style="height: 30px; margin-top: 25px">
                                 <option value="" disabled></option>
-                                <option th:each="cur : ${currencies}"  th:value="${cur}" th:text="${cur}"></option>
+                                <option th:each="cur : ${T(obniavka.timemanagment.data.ExpenseType).values()}"  th:value="${cur}" th:text="#{${cur}}"></option>
                             </select>
                             <p class="alert alert-danger" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" >
 

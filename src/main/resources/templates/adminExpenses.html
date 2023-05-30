@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" style="width: 100%;
+    min-height: 100%;">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<head th:replace="fragments/header" th:object="${current}">
+    <meta charset="UTF-8">
+    <title>Expenses</title>
+</head>
+
+
+<body style="background-color: transparent">
+<div th:replace="fragments/menuTabs :: menuTabs">
+</div>
+
+<div id="content2"style="margin-left: 320px; margin-top: 10px;" target="_blank">
+    <div class="row">
+    <form th:action="@{/admin/convertExpense}" target="_blank" method="get">
+        <button class="button-34" role="button"  style="margin-bottom: 10px; " id="subBut" disabled>
+            <span th:text="#{CREATE.FILE}" disabled></span>
+        </button>
+    </form>
+    <form id="acceptExpForm" th:action="@{/admin/accept/expenses}" method="post">
+        <button class="button-34" role="button"  type="submit" style="margin-bottom: 10px; margin-left: 50px" id="acceptExp" disabled>
+            <span th:text="#{ACCEPT}"></span>
+        </button>
+    </form>
+    </div>
+    <link th:href="@{/styles/report.css}" rel="stylesheet" />
+
+    <table>
+        <thead>
+        <tr>
+            <th ></th>
+            <th th:text="#{USER}"></th>
+            <th th:text="#{ASSIGNMENT}"></th>
+            <th th:text="#{EXPENSE.TYPE}"></th>
+            <th th:text="#{EXPENSE.PRICE}"></th>
+            <th th:text="#{USER.CURRENCY}"></th>
+            <th th:text="#{RECEIPTS}"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="expense : ${expenses}">
+            <td ><input type="checkbox" name="selectedItems" th:value="${expense.id}"></td>
+            <td th:text="${expense.user.fullName()}" ></td>
+            <td th:text="${expense.assignment.name}" ></td>
+            <td th:text="#{${expense.expenseType}}" ></td>
+            <td th:text="${expense.price}" ></td>
+            <td th:text="#{${expense.currency}}" ></td>
+            <td>
+                <th:block th:each="receipt:${expense.getReceipts()}">
+                <a th:href="@{/admin/receipt/{id}(id=${receipt.id})}" th:text="${receipt.fileName}"></a>
+        </th:block>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <div class="mt-30" style="margin-top: 30px;">
+        <div th:replace="fragments/Pagination::pagination('/admin/expenses')"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('input[name="selectedItems"]').on('change', function() {
+            var checked = $('input[name="selectedItems"]:checked').length;
+            if (checked > 0) {
+                $('#subBut').prop('disabled', false);
+                $('#acceptExp').prop('disabled', false);
+            } else {
+                $('#subBut').prop('disabled', true);
+                $('#acceptExp').prop('disabled', true);
+            }
+        });
+    });
+    $(document).ready(function() {
+        $('#subBut').click(function(event) {
+            event.preventDefault();
+
+            var selectedIds = [];
+            $('input[name="selectedItems"]:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            var selectedIdsStr = selectedIds.join(',');
+
+            var url = '/admin/convertExpense?selectedIds=' + selectedIdsStr;
+            window.open(url, '_blank');
+        });
+    });
+    $(document).ready(function() {
+        $('#acceptExpForm').submit(function(event) {
+            event.preventDefault();
+
+            var selectedIds = [];
+            $('input[name="selectedItems"]:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            var selectedIdsStr = selectedIds.join(',');
+
+            var hiddenInput = $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'selectedIds')
+                .val(selectedIdsStr);
+
+            $('#acceptExpForm').append(hiddenInput);
+
+            $('#acceptExpForm').unbind('submit').submit();
+        });
+
+        $('input[name="selectedItems"]').on('change', function() {
+            var checked = $('input[name="selectedItems"]:checked').length;
+            if (checked > 0) {
+                $('#acceptExp').prop('disabled', false);
+            } else {
+                $('#acceptExp').prop('disabled', true);
+            }
+        });
+    });
+</script>
+</body>
+</html>

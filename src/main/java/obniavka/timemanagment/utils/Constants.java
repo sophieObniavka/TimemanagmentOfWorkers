@@ -1,7 +1,5 @@
 package obniavka.timemanagment.utils;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Constants {
 
@@ -28,15 +26,7 @@ public class Constants {
 
     public static final String ASSIGNMENTS = "assignments";
     public static final String CURRENCIES = "currencies";
+    public static final String EXPENSE = "expense";
+    public static final String EXPENSES = "expenses";
 
-    public static final List<String> currencies = new ArrayList<>();
-
-    static {
-        currencies.add("UAH");
-        currencies.add("USD");
-        currencies.add("EUR");
-        currencies.add("GBP");
-        currencies.add("JPY");
-        currencies.add("CAD");
-    }
 }

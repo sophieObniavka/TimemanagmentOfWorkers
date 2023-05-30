@@ -141,7 +141,7 @@
                                     <div class="col-sm-4">
                                         <h6 class="mb-0" th:text="#{USER.SALARYPERHOUR}"></h6>
                                     </div>
-                                    <div class="col-sm-6 text-secondary" th:text="*{salaryPerHour +' '+ currency}">
+                                    <div class="col-sm-6 text-secondary" th:text="${user.salaryPerHour} + ' ' + #{${user.currency}}">
 
                                     </div>
                                 </div>

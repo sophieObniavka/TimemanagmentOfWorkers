@@ -1,5 +1,7 @@
 package obniavka.timemanagment.services;
 
+import obniavka.timemanagment.data.Task;
+import obniavka.timemanagment.data.User;
 import obniavka.timemanagment.domain.TaskDto;
 import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.repository.TaskRepository;
@@ -8,6 +10,9 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class TaskService {
@@ -41,5 +46,18 @@ public class TaskService {
         }
 
         return taskRepository.findByUser(taskMapper.map(userDto),keyword, pageable).map(taskMapper::map);
+    }
+
+    public List<TaskDto> fetchAllTasksBetweenYesterdayAndTomorrow(UserDto userDto){
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        return taskMapper.map(taskRepository.findByDeadlineBetweenAndUser(yesterday,tomorrow,taskMapper.map(userDto)));
+    }
+
+    public void removeTaskById(Long id){
+        Task task = taskRepository.findById(id).get();
+        User user = task.getUser();
+        user.getTasks().remove(task);
+        taskRepository.deleteById(id);
     }
 }

@@ -79,6 +79,7 @@ public class UserService  implements UserDetailsService{
                 .sum());
         return userDto;
     }
+
     public UserDto persistUserInDb(final UserDto userDto){
         User saved = userRepository.findById(userDto.getId()).orElse(null);
         User user = userMapper.map(userDto);
@@ -143,6 +144,10 @@ public class UserService  implements UserDetailsService{
         }
         users.filter(u-> Objects.requireNonNull(u.getImageUrl()).length != 0).forEach(user -> user.setConvertedImage(Base64.getEncoder().encodeToString(user.getImageUrl())));
         return users;
+    }
+
+    public Page<UserDto> fetchAllUserWithUnprocessedExpenses(Pageable pageable){
+        return userRepository.findUsersWithExpensesToProcess(pageable).map(userMapper::map);
     }
 
     public boolean checkIfEmailAlreadyExist(UserDto user, String email){

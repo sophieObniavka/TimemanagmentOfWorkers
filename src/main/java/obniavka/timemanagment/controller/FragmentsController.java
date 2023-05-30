@@ -1,31 +1,32 @@
 package obniavka.timemanagment.controller;
 
-import obniavka.timemanagment.data.User;
+import obniavka.timemanagment.domain.TaskDto;
 import obniavka.timemanagment.domain.UserDto;
 import obniavka.timemanagment.helper.Tabs;
+import obniavka.timemanagment.services.TaskService;
 import obniavka.timemanagment.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @ControllerAdvice
 public class FragmentsController {
     private final UserService userService;
+    private final TaskService taskService;
 
 
-    public FragmentsController(UserService userService) {
+    public FragmentsController(UserService userService, TaskService taskService) {
         this.userService = userService;
+        this.taskService = taskService;
     }
 
     @ModelAttribute("tabsMenu")
@@ -59,4 +60,9 @@ public class FragmentsController {
         return LocalDate.now().getYear() + "-" + String.format("%02d", LocalDate.now().getMonthValue());
     }
 
+    @GetMapping("/deadline-before-tomorrow")
+    public List<TaskDto> getTasksWithDeadlineBeforeTomorrow(@ModelAttribute("current") UserDto user) {
+        UserDto userDto = userService.findUserByEmail(user.getEmail());
+        return taskService.fetchAllTasksBetweenYesterdayAndTomorrow(userDto);
+    }
 }

@@ -9,6 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("select t from Task t")
@@ -28,4 +31,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Page<Task> findByUser(@Param("user") User user, @Param("keyword") String keyword, Pageable pageable);
 
     Page<Task> findByUser(final User user, Pageable pageable);
+
+    List<Task> findByDeadlineBetweenAndUser(LocalDate yesterday, LocalDate tomorrow, User map);
 }

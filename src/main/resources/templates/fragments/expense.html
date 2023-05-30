@@ -1,0 +1,64 @@
+<div id="expenseDialog" class="modal" th:fragment="container">
+    <div class="modal-content animate-top">
+        <div class="modal-header" style="background-color: black">
+            <h5 class="modal-title" th:text="#{EXPENSE}" style="color: white"></h5>
+            <button type="button" class="close">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="inputTaskForm" th:action="@{/expenses}" class="mr-0" method="post" th:object="${expense}" enctype="multipart/form-data">
+                <div class="col-md-10" style="margin-left: 15px">
+                    <ul  class="list-unstyled ml-0" >
+
+                        <input class="mr-20" id="expenseId" th:name="id" th:field="*{id}" hidden="true" readonly>
+
+                        <li style="height: 60px" class="mt-1">
+                            <h5 class="mb-2" th:text="#{ASSIGNMENT}"></h5>
+                            <select class="form-control" id="expenseAssignment" name="assignedTo" th:field="*{assignment.id}" style="width: 203px" >
+                                <option value="" th:text="#{CHOOSE}" disabled th:selected="${expense.assignment == null ? 'selected' : ''}"></option>
+                                <option th:each="assignment : ${assignments}" th:value="${assignment.id}" th:text="${assignment.name}"></option>
+                            </select>
+                        </li>
+
+                        <li style="height: 60px" class="mt-4">
+                            <h5 class="mb-2" th:text="#{EXPENSE.TYPE}"></h5>
+                            <select class="form-control" id="expenseType" name="assignedTo" th:field="*{expenseType}" style="width: 203px" >
+                                <option value="" th:text="#{CHOOSE}" disabled th:selected="${expense.expenseType == null ? 'selected' : ''}"></option>
+                                <option th:each="type : ${T(obniavka.timemanagment.data.ExpenseType).values()}" th:value="${type}" th:text="#{${type}}"></option>
+                            </select>
+                        </li>
+
+                        <li style="height: 60px" class="mt-4">
+                            <h5 class="mb-2" th:text="#{EXPENSE.PRICE}"></h5>
+                            <input class="mr-20" type="text" id="priceExpense" th:field="*{price}" style="width: 203px" required>
+                        </li>
+
+                        <li style="height: 60px" class="mt-1">
+
+                            <h5 class="mb-2" th:text="#{USER.CURRENCY}"></h5>
+                            <select class="form-control" id="expenseCurrency" name="assignedTo" th:field="*{currency}" style="width: 203px" >
+                                <option value="" th:text="#{CHOOSE}" disabled th:selected="${expense.currency == null ? 'selected' : ''}"></option>
+                                <option th:each="currency : ${T(obniavka.timemanagment.data.Currency).values()}" th:value="${currency}" th:text="#{${currency}}"></option>
+                            </select>
+
+                        </li>
+
+
+
+                        <div id="fileList" style="margin-top: 20px">
+                            <input type="file" name="files" multiple>
+                        </div>
+
+                        <a href="#" id="addUserBtn" onclick="addFileInput()" style="margin-top: 8px">Add file</a>
+                    </ul>
+
+
+                </div>
+                <button  id="saveButton" style="margin-top: 30px; margin-left: 30px"><h3 th:text="#{REPORT.SAVE}"></h3></button>
+            </form>
+        </div>
+
+
+    </div>
+</div>

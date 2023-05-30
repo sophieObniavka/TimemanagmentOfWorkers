@@ -169,14 +169,14 @@ public class ReportController {
             context.setVariable("cents", AmountOfDays.getFractionalPart(AmountOfDays.getSalaryPerMonth(reports)));
             context.setVariable("totalWordsEN", NumberToWordsConverter.convertNumberToWordsEN(AmountOfDays.getSalaryPerMonth(reports).intValue()));
             context.setVariable("totalWordsUK", NumberToWordsConverter.convertToUkrainian(AmountOfDays.getSalaryPerMonth(reports).intValue()));
-            context.setVariable("fractional", Transliteration.getFractional(userDto.getCurrency()));
+            context.setVariable("fractional", userDto.getCurrency().getFractional());
 
             String htmlContent = templateEngine.process("invoice", context);
 
 
             ITextRenderer renderer = new ITextRenderer();
             renderer.getFontResolver().addFont (
-                    "C:\\Users\\Sophie\\Desktop\\textPdf\\src\\main\\java\\com\\example\\textpdf\\Arial Unicode MS.ttf",
+                    "src/main/resources/Arial Unicode MS.ttf",
                     BaseFont.IDENTITY_H,
                     BaseFont.EMBEDDED
             );

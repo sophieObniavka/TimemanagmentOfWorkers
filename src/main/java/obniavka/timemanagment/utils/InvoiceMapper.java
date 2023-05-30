@@ -24,6 +24,7 @@ public interface InvoiceMapper {
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "assignments", ignore = true)
     @Mapping(target = "invoices", ignore = true)
+    @Mapping(target = "expenses", ignore = true)
     UserDto map(final User user);
 
     @Mapping(target = "vacations", ignore = true)
@@ -32,6 +33,7 @@ public interface InvoiceMapper {
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "assignments", ignore = true)
     @Mapping(target = "invoices", ignore = true)
+    @Mapping(target = "expenses", ignore = true)
     User map(UserDto userDto);
 
 

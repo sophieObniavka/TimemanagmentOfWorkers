@@ -1,8 +1,12 @@
 package obniavka.timemanagment.controller;
 
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
 import obniavka.timemanagment.domain.*;
 import obniavka.timemanagment.helper.AmountOfDays;
+import obniavka.timemanagment.helper.NumberToWordsConverter;
+import obniavka.timemanagment.helper.Transliteration;
 import obniavka.timemanagment.services.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +18,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.Principal;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import static obniavka.timemanagment.utils.Constants.*;
@@ -37,6 +47,9 @@ public class AdminController {
     private final ReportService reportService;
     private final AssignmentService assignmentService;
     private final InvoiceService invoiceService;
+    private final ExpenseService expenseService;
+    private final ReceiptService receiptService;
+    private final TemplateEngine templateEngine;
 
     @GetMapping("/report")
     public String homeAdmin(Model model, @RequestParam("page") Optional<Integer> page, @ModelAttribute("selected") String selectedDate) {
@@ -72,7 +85,6 @@ public class AdminController {
 
     @GetMapping("/users/{id}")
     public String user(final Model model, final @PathVariable("id") String id) {
-        model.addAttribute(CURRENCIES, currencies);
 
         if (id == null && model.getAttribute(USER) == null) {
             model.addAttribute(USER, new UserDto());
@@ -95,8 +107,6 @@ public class AdminController {
 
     @GetMapping("/users/create")
     public String createUser(final Model model) {
-
-        model.addAttribute(CURRENCIES, currencies);
         if (model.getAttribute(USER) == null) {
             model.addAttribute(USER, new UserDto());
         }
@@ -106,7 +116,6 @@ public class AdminController {
 
     @PostMapping("/users")
     public String persistUser(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
-        model.addAttribute(CURRENCIES, currencies);
         if (!multipartFile.isEmpty()) {
             user.setImageUrl(multipartFile.getBytes());
         }
@@ -271,7 +280,11 @@ public class AdminController {
         String referer = request.getHeader("Referer");
         return "redirect:" + referer;
     }
-
+    @GetMapping("/tasks/delete/{id}")
+    public String getAllTasks(final Model model,@PathVariable("id")Long id){
+        taskService.removeTaskById(id);
+        return "redirect:/admin/tasks";
+    }
     @GetMapping("/assignments")
     public String getAllAssignments(final Model model, @RequestParam("page") Optional<Integer> page, @RequestParam(required = false) String keyword) {
         Page<AssignmentDto> assignments = assignmentService.fetchAllAssignmentsFromDB(keyword, PageRequest.of(page.orElse(1) - 1, 10));
@@ -321,5 +334,76 @@ public class AdminController {
     public String removeInvoice(@PathVariable("id") Long id){
         invoiceService.dropInvoiceFromDb(id);
         return "redirect:/admin/" + "invoices";
+    }
+
+    @GetMapping("/expenses")
+    public String getAllExpenses(final Model model, @RequestParam("page") Optional<Integer> page) {
+       Page<ExpenseDto> expenses = expenseService.fetchAllUnprocessedExpenses(PageRequest.of(page.orElse(1) - 1, 5));
+        paginationModel(model, EXPENSES, page,expenses, "");
+        return "adminExpenses";
+    }
+
+    @GetMapping("/receipt/{id}")
+    public void downloadReceipt(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        ReceiptDto receiptDto = receiptService.getReceiptById(id);
+        byte[] receiptData = receiptDto.getReceipt_url();
+
+        String fileName = receiptDto.getFileName();
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        response.getOutputStream().write(receiptData);
+        response.getOutputStream().flush();
+    }
+
+    @GetMapping("/convertExpense")
+    public void convertExpenses(HttpServletResponse response,@RequestParam("selectedIds") List<Long> selectedIds){
+
+        response.setLocale(new Locale("uk"));
+        List<ExpenseDto> expenseDtos = expenseService.fetchAllExpensesById(selectedIds);
+
+        String fileName= "Expenses." + expenseDtos.get(0).getUser().fullName() + ".pdf";
+        try  (OutputStream outputStream = response.getOutputStream()){
+
+            Context context = new Context();
+
+            context.setVariable("user",expenseDtos.get(0).getUser());
+            context.setVariable("expenses", expenseDtos);
+            context.setVariable("expensesTotal", expenseService.calculateTotalSum(expenseDtos));
+
+            String htmlContent = templateEngine.process("expensesReceipt", context);
+
+
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.getFontResolver().addFont (
+                    "src/main/resources/Arial Unicode MS.ttf",
+                    BaseFont.IDENTITY_H,
+                    BaseFont.EMBEDDED
+            );
+            renderer.setDocumentFromString(htmlContent);
+            renderer.layout();
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            renderer.createPDF(byteArrayOutputStream);
+            byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "inline; filename=\"" + fileName + "\"");
+
+            response.setContentLength(pdfBytes.length);
+            outputStream.write(pdfBytes);
+            outputStream.flush();
+
+        } catch (IOException | DocumentException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @PostMapping("/accept/expenses")
+    public String acceptExpenses(@RequestParam("selectedIds") List<Long> selectedIds) {
+        List<ExpenseDto> expenseDtos = expenseService.fetchAllExpensesById(selectedIds);
+        expenseService.acceptExpenses(expenseDtos);
+        return "redirect:/admin/expenses";
     }
 }

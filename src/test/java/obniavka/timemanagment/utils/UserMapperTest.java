@@ -1,5 +1,7 @@
 package obniavka.timemanagment.utils;
 
+import obniavka.timemanagment.data.Currency;
+import obniavka.timemanagment.data.ExpenseType;
 import obniavka.timemanagment.data.User;
 import obniavka.timemanagment.domain.*;
 import org.junit.jupiter.api.Assertions;
@@ -23,10 +25,17 @@ public class UserMapperTest {
         TaskDto taskDto = new TaskDto();
         AssignmentDto assignmentDto = new AssignmentDto();
         InvoiceDto invoiceDto = new InvoiceDto();
+        ExpenseDto expenseDto = new ExpenseDto();
 
         invoiceDto.setId(1L);
         invoiceDto.setPdfData(new byte[]{1,2,44,63,2});
         invoiceDto.setUser(userDto);
+
+        expenseDto.setId(1L);
+        expenseDto.setPrice(200.7);
+        expenseDto.setExpenseType(ExpenseType.ACCOMMODATION);
+        expenseDto.setCurrency(Currency.EURO);
+        expenseDto.setUser(userDto);
 
         vacationDto.setId(1L);
         vacationDto.setBegin(LocalDate.of(2022, Month.AUGUST, 24));
@@ -87,7 +96,7 @@ public class UserMapperTest {
         userDto.setAccount("3243314342114153");
         userDto.setBeneficiaryBank("PRIVAT");
         userDto.setSwiftCode("XX83YU");
-        userDto.setCurrency("EUR");
+        userDto.setCurrency(Currency.EURO);
         userDto.setBirth(LocalDate.of(1999, Month.AUGUST, 22));
         userDto.setHired(LocalDate.of(2022, Month.APRIL, 10));
         userDto.setVacations(Set.of(vacationDto));
@@ -96,6 +105,7 @@ public class UserMapperTest {
         userDto.setTasks(Set.of(taskDto));
         userDto.setAssignments(Set.of(assignmentDto));
         userDto.setInvoices(Set.of(invoiceDto));
+        userDto.setExpenses(Set.of(expenseDto));
 
 
         User user = UserMapper.MAPPER.map(userDto);
@@ -107,6 +117,7 @@ public class UserMapperTest {
         Assertions.assertEquals(1, user.getTasks().size());
         Assertions.assertEquals(1, user.getAssignments().size());
         Assertions.assertEquals(1, user.getInvoices().size());
+        Assertions.assertEquals(1, user.getExpenses().size());
         Assertions.assertEquals("ROLE_ADMIN", user.getRole());
         Assertions.assertEquals(userDto.getPosition(), user.getPosition());
     }

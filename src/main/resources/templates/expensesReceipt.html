@@ -1,0 +1,82 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <title></title>
+    <style
+            type="text/css">
+        @font-face {
+            font-family: Arial1;
+            src: url("../Arial Unicode MS.ttf");
+            -fs-pdf-font-embed: embed;
+            -fs-pdf-font-encoding: Identity-H;
+
+        }
+
+        * {
+            font-family: Arial Unicode MS;
+        }
+        body {
+            font-size:9pt }p { margin:0pt }table { margin-top:0pt; margin-bottom:0pt }.BodyTextIndent { margin-left:14.15pt; margin-bottom:6pt; line-height:normal; font-size:12pt }
+        span.a {  font-size:12pt }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>Customer/</span><span style='font-size:16px;line-height:107%;'>Замовник</span><span style='font-size:16px;line-height:107%;'>: IT PRODUCTIVE COMPANY&#160;</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>(HAFTUNGSBESCHRÄNKT)</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>&#160;Maximillianstrasse 29-31. DE/MÜNCHEN, 42876</span><span style='font-size:16px;line-height:107%;'>/</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>IT PRODUCTIVE COMPANY&#160;</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>(HAFTUNGSBESCHRÄNKT)&#160;</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>Maximillianstrasse 29-31. Мюнхен, 42876, Німеччина</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;'>Supplier/</span><span style='font-size:16px;line-height:107%;'>Виконавець</span><span style='font-size:16px;line-height:107%;'>:&#160;</span><span style='font-size:16px;line-height:107%;' th:text="${user.translate().firstName + ' ' + user.translate().lastName + ' ' + user.translate().patronymic}"></span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;' th:text="${'address: ' + user.postCode + ', ' + user.translate().city + ', ' + user.translate().street + ' , ' + user.houseNumber}"></span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;'><span style='font-size:16px;line-height:107%;' th:text="${'Individual Tax Number - ' + user.taxNumber}">/</span></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;' th:text="${user.lastName + ' ' + user.firstName + ' ' + user.patronymic + ','}"></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;' th:text="${'що проживає за адресою ' + user.postCode + ', ' + user.city + ','}"></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:right;' th:text="${' ' + user.translate().street + ' , ' + user.houseNumber + ', ІПН - ' + user.taxNumber}"></p>
+<p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;text-align:center;'><span style='font-size:19px;line-height:107%;'>Expenses/</span><span style='font-size:19px;line-height:107%;'>Витрати</span></p>
+
+<table style="margin-top: 15px; width: 100%">
+    <tr>
+        <td style="font-size: 15px">Assignment/Відрядження</td>
+        <td>Expense type/Тип витрат</td>
+        <td>Price/Вартість</td>
+        <td>Currency/Валюта</td>
+    </tr>
+    <tr th:each="expense: ${expenses}">
+        <td th:text="${expense.assignment.name}"></td>
+        <td th:text="#{${expense.expenseType}}"></td>
+        <td th:text="${expense.price}"></td>
+        <td th:text="#{${expense.currency}}"></td>
+    </tr>
+
+    <tr style="font-size: 16px" th:text="#{REPORT.TOTALSUM} + ' ' + ${expensesTotal}"></tr>
+</table>
+<div class="footer">
+    <p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;'>
+        <span style='font-size:16px;line-height:107%;'>Director/Директор: _________________ (Someone S. / Сомеван С. )</span>
+    </p>
+    <p style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;'>
+        <span style='font-size:19px;line-height:107%;'>&#160;</span>
+    </p>
+</div>
+</body>
+</html>

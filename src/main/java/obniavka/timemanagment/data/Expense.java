@@ -1,8 +1,11 @@
 package obniavka.timemanagment.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @Builder(toBuilder = true)
@@ -18,9 +21,11 @@ public class Expense {
     @Column
     private ExpenseType expenseType;
     @Column
+    private Currency currency;
+    @Column
     private Double price;
-    @Lob
-    private byte[] receipt;
+    @Column
+    private Boolean accepted;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
@@ -28,5 +33,14 @@ public class Expense {
     @EqualsAndHashCode.Exclude
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "assignment_id", referencedColumnName = "assignment_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Assignment assignment;
 
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonIgnoreProperties("expense")
+    private Set<Receipt> receipts = new HashSet<>();
 }
