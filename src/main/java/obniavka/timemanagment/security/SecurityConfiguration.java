@@ -42,12 +42,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler, UserDetailsService userDetailsService) throws Exception {
         http
                 .authorizeRequests()
-               // .antMatchers("/image/**").permitAll()
                 .antMatchers("/image/**", "/convert", "/js/**", "/styles/**", "/login/**").permitAll()
                 .antMatchers("/test").permitAll()
-              //  .antMatchers("/js/**").permitAll()
-               // .antMatchers("/styles/**").permitAll()
-              //  .antMatchers("/login/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
                 .formLogin()
@@ -59,7 +55,7 @@ public class SecurityConfiguration {
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl(LOGIN)
-                .deleteCookies("JSESSIONID")
+                //.deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .and()
                 .rememberMe().userDetailsService(userDetailsService)

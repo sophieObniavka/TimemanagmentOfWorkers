@@ -6,13 +6,12 @@
 <head th:replace="fragments/header">
     <meta charset="UTF-8">
     <title>Task</title>
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
 </head>
 </head>
 
 <body style="background-color: transparent">
-<div th:replace="fragments/menuTabs :: menuTabs">
-</div>
+<nav th:replace="fragments/menuTabs :: menuTabs" >
+</nav>
 
 <div class="px-0 py-2 border-bottom-1 mt-4 ml-10" style="margin-left: 190px">
     <ul class="nav col-12 col-lg-auto ml-10 my-2 justify-content-right my-md-0 text-small" >
@@ -78,7 +77,7 @@
 <div th:replace="fragments/task :: container">
 
 </div>
-<div class="mt-30" style="margin-top: 30px;">
+<div class="mt-30 " style="margin-top: 30px;margin-bottom: 30px">
     <div th:replace="fragments/Pagination::pagination('/admin/tasks')"></div>
 </div>
 

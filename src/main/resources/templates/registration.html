@@ -1,154 +1,154 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Registration</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-	crossorigin="anonymous">
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--<meta charset="ISO-8859-1">-->
+<!--<title>Registration</title>-->
+<!--<link rel="stylesheet"-->
+<!--	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"-->
+<!--	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"-->
+<!--	crossorigin="anonymous">-->
+<!--</head>-->
+<!--<body>-->
 
-	<!-- create navigation bar ( header) -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-					aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#" th:href="@{/}">Registration and
-					Login Module</a>
-			</div>
-		</div>
-	</nav>
+<!--	&lt;!&ndash; create navigation bar ( header) &ndash;&gt;-->
+<!--	<nav class="navbar navbar-inverse navbar-fixed-top">-->
+<!--		<div class="container">-->
+<!--			<div class="navbar-header">-->
+<!--				<button type="button" class="navbar-toggle collapsed"-->
+<!--					data-toggle="collapse" data-target="#navbar" aria-expanded="false"-->
+<!--					aria-controls="navbar">-->
+<!--					<span class="sr-only">Toggle navigation</span> <span-->
+<!--						class="icon-bar"></span> <span class="icon-bar"></span> <span-->
+<!--						class="icon-bar"></span>-->
+<!--				</button>-->
+<!--				<a class="navbar-brand" href="#" th:href="@{/}">Registration and-->
+<!--					Login Module</a>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</nav>-->
 
-<br>
-<br>
-	<!-- Create HTML registration form -->
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6 col-md-offset-3">
+<!--<br>-->
+<!--<br>-->
+<!--	&lt;!&ndash; Create HTML registration form &ndash;&gt;-->
+<!--	<div class="container">-->
+<!--		<div class="row">-->
+<!--			<div class="col-md-6 col-md-offset-3">-->
 
-				<!-- success message -->
-				<div th:if="${param.success}">
-					<div class="alert alert-info">You've successfully registered
-						to our awesome app!</div>
-				</div>
+<!--				&lt;!&ndash; success message &ndash;&gt;-->
+<!--				<div th:if="${param.success}">-->
+<!--					<div class="alert alert-info">You've successfully registered-->
+<!--						to our awesome app!</div>-->
+<!--				</div>-->
 
-				<h1>Registration</h1>
+<!--				<h1>Registration</h1>-->
 
-				<form th:action="@{/registration}" method="post" th:object="${user}">
-						<!-- Form Row-->
-						<div class="row gx-3 mb-3">
+<!--				<form th:action="@{/registration}" method="post" th:object="${user}">-->
+<!--						&lt;!&ndash; Form Row&ndash;&gt;-->
+<!--						<div class="row gx-3 mb-3">-->
 
-							<div class="col-md-6 ">
-								<label class="small mb-1"  th:text = "#{USER.FIRSTNAME}"></label>
-								<input id="firstName" class="form-control"  type="text" th:field="*{firstName}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" >
-							</div>
-							<div class="col-md-6">
-								<label class="small mb-1" th:text = "#{USER.LASTNAME}"></label>
-								<input id="lastName" class="form-control" type="text" th:field="*{lastName}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" >
-							</div>
-							<div class="col-md-6">
-								<label class="small mb-1" th:text = "#{USER.BIRTH}"></label>
-								<input id="birth" class="form-control"  type="date" th:field="*{birth}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" >
-							</div>
-							<div class="col-md-6">
-								<label class="small mb-1" th:text = "#{USER.HIRED}"></label>
-								<input id="hired" class="form-control"  type="date" th:field="*{hired}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('hired')}" th:errors="*{hired}" >
-							</div>
-							<div class="col-md-6">
-								<label class="small mb-1" th:text = "#{USER.PHONENUMBER}"></label>
-								<input id="phoneNumber" class="form-control"  type="tel" th:field="*{phoneNumber}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" >
-							</div>
+<!--							<div class="col-md-6 ">-->
+<!--								<label class="small mb-1"  th:text = "#{USER.FIRSTNAME}"></label>-->
+<!--								<input id="firstName" class="form-control"  type="text" th:field="*{firstName}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" >-->
+<!--							</div>-->
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text = "#{USER.LASTNAME}"></label>-->
+<!--								<input id="lastName" class="form-control" type="text" th:field="*{lastName}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" >-->
+<!--							</div>-->
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text = "#{USER.BIRTH}"></label>-->
+<!--								<input id="birth" class="form-control"  type="date" th:field="*{birth}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" >-->
+<!--							</div>-->
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text = "#{USER.HIRED}"></label>-->
+<!--								<input id="hired" class="form-control"  type="date" th:field="*{hired}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('hired')}" th:errors="*{hired}" >-->
+<!--							</div>-->
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text = "#{USER.PHONENUMBER}"></label>-->
+<!--								<input id="phoneNumber" class="form-control"  type="tel" th:field="*{phoneNumber}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" >-->
+<!--							</div>-->
 
-							<div class="col-md-6">
-								<label class="small mb-1" th:text = "#{USER.EMPLOYEEID}"></label>
-								<input id="employeeId" class="form-control" type="text" th:field="*{employeeId}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}" >
-							</div>
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text = "#{USER.EMPLOYEEID}"></label>-->
+<!--								<input id="employeeId" class="form-control" type="text" th:field="*{employeeId}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}" >-->
+<!--							</div>-->
 
-						</div>
-						<label class="radio-label" th:text = "#{USER.ROLE}"></label>
-						<div class="form-radio" id="role" style="display: -webkit-flex;.form-radio { margin-bottom: 18px;}">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="USER" checked th:field="*{role}">
-								<label class="form-check-label" for="inlineRadio1" th:text="#{USER.ROLE.OPTION1}"></label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" th:value="ADMIN" th:field="*{role}">
-								<label class="form-check-label" for="inlineRadio2" th:text="#{USER.ROLE.OPTION2}"></label>
-							</div>
+<!--						</div>-->
+<!--						<label class="radio-label" th:text = "#{USER.ROLE}"></label>-->
+<!--						<div class="form-radio" id="role" style="display: -webkit-flex;.form-radio { margin-bottom: 18px;}">-->
+<!--							<div class="form-check form-check-inline">-->
+<!--								<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="USER" checked th:field="*{role}">-->
+<!--								<label class="form-check-label" for="inlineRadio1" th:text="#{USER.ROLE.OPTION1}"></label>-->
+<!--							</div>-->
+<!--							<div class="form-check form-check-inline">-->
+<!--								<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" th:value="ADMIN" th:field="*{role}">-->
+<!--								<label class="form-check-label" for="inlineRadio2" th:text="#{USER.ROLE.OPTION2}"></label>-->
+<!--							</div>-->
 
-						</div>
-						<p class="alert alert-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}" >
+<!--						</div>-->
+<!--						<p class="alert alert-danger" th:if="${#fields.hasErrors('role')}" th:errors="*{role}" >-->
 
-							<!-- Form Row        -->
-						<div class="card-header mt-3" th:text="#{USER.ADDRESS}"></div>
-						<div class="row gx-3 mb-3">
+<!--							&lt;!&ndash; Form Row        &ndash;&gt;-->
+<!--						<div class="card-header mt-3" th:text="#{USER.ADDRESS}"></div>-->
+<!--						<div class="row gx-3 mb-3">-->
 
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.COUNTRY}"></label>
-								<input class="form-control"  id="country" type="text" th:field="*{country}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('country')}" th:errors="*{country}" >
-							</div>
-							<!-- Form Group (location)-->
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.CITY}"></label>
-								<input class="form-control" id="city" type="text" th:field="*{city}" >
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}" >
-							</div>
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.COUNTRY}"></label>-->
+<!--								<input class="form-control"  id="country" type="text" th:field="*{country}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('country')}" th:errors="*{country}" >-->
+<!--							</div>-->
+<!--							&lt;!&ndash; Form Group (location)&ndash;&gt;-->
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.CITY}"></label>-->
+<!--								<input class="form-control" id="city" type="text" th:field="*{city}" >-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}" >-->
+<!--							</div>-->
 
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.STREET}"></label>
-								<input class="form-control" id="street" type="text" th:field="*{street}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}" >
-							</div>
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.STREET}"></label>-->
+<!--								<input class="form-control" id="street" type="text" th:field="*{street}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}" >-->
+<!--							</div>-->
 
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.HOUSENUMBER}"></label>
-								<input class="form-control" id="houseNumber" type="text" th:field="*{houseNumber}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}" >
-							</div>
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.HOUSENUMBER}"></label>-->
+<!--								<input class="form-control" id="houseNumber" type="text" th:field="*{houseNumber}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}" >-->
+<!--							</div>-->
 
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.POSTCODE}"></label>
-								<input class="form-control" id="postCode" type="text" th:field="*{postCode}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}" >
-							</div>
-						</div>
-						<!-- Form Group (email address)-->
-						<div class="card-header mt-3" th:text="#{USER.SIGNIN.DATA}"></div>
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.POSTCODE}"></label>-->
+<!--								<input class="form-control" id="postCode" type="text" th:field="*{postCode}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}" >-->
+<!--							</div>-->
+<!--						</div>-->
+<!--						&lt;!&ndash; Form Group (email address)&ndash;&gt;-->
+<!--						<div class="card-header mt-3" th:text="#{USER.SIGNIN.DATA}"></div>-->
 
-						<div class="row gx-3 mb-3">
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.EMAIL}"></label>
-								<input class="form-control" id="email" type="email" th:field="*{email}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" >
-							</div>
+<!--						<div class="row gx-3 mb-3">-->
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.EMAIL}"></label>-->
+<!--								<input class="form-control" id="email" type="email" th:field="*{email}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" >-->
+<!--							</div>-->
 
-							<div class="col-md-6">
-								<label class="small mb-1" th:text="#{USER.PASSWORD}"></label>
-								<input class="form-control" id="password" type="password" th:field="*{password}">
-								<p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" >
-							</div>
-						</div>
+<!--							<div class="col-md-6">-->
+<!--								<label class="small mb-1" th:text="#{USER.PASSWORD}"></label>-->
+<!--								<input class="form-control" id="password" type="password" th:field="*{password}">-->
+<!--								<p class="alert alert-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}" >-->
+<!--							</div>-->
+<!--						</div>-->
 
-						<!-- Save changes button-->
-						<input class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{/admin/users}"/>
-				</form>
-			</div>
-		</div>
-	</div>
-</body>
-</html>
+<!--						&lt;!&ndash; Save changes button&ndash;&gt;-->
+<!--						<input class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{/admin/users}"/>-->
+<!--				</form>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
+<!--</body>-->
+<!--</html>-->

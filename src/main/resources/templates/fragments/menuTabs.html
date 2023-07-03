@@ -1,8 +1,8 @@
 
-<nav class="main-menu" style="margin-top: 96px; height: auto" xmlns:th="http://www.thymeleaf.org" th:fragment="menuTabs">
+<nav class="main-menu" style="margin-top: 96px; flex-grow: 0;" xmlns:th="http://www.thymeleaf.org" th:fragment="menuTabs">
 
     <ul>
-        <li th:each="tab : ${tabsMenu}" th:class="'has-subnav ' + ${#request.requestURI.contains(tab.getRequestUrl().substring(0,10)) ? 'active':''}" style="margin-left: 0px">
+        <li th:each="tab : ${tabsMenu}" th:class="'has-subnav ' + ${#request.requestURI.contains(tab.getRequestUrl().substring(0,10)) ? 'active':''}" style="margin-left: 0px;">
             <a th:href="${tab.getRequestUrl()}" >
                 <i th:class="${tab.getIcon()}" ></i>
                 <span class="nav-text" th:text="#{${tab.getName()}}"></span>

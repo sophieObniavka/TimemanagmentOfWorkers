@@ -25,11 +25,20 @@ public class AmountOfDays {
 
     public static LocalTime getDurationOfTime(LocalTime startTime, LocalTime endTime, LocalTime pause){
         Duration workDuration = Duration.between(startTime, endTime).minus(Duration.ofHours(pause.getHour()).plusMinutes(pause.getMinute()));
-        long hours = workDuration.toHours();
-        long minutes = workDuration.toMinutes() % 60;
 
+        if (workDuration.isNegative()) {
+            workDuration = workDuration.plus(Duration.ofDays(1));
+        }
 
-        return LocalTime.of((int) hours,(int)minutes);
+        long totalMinutes = workDuration.toMinutes();
+        long hours = totalMinutes / 60;
+        long minutes = totalMinutes % 60;
+
+        if (hours > 12) {
+            hours -= 12;
+        }
+
+        return LocalTime.of((int) hours, (int) minutes);
     }
 
     public static Double getSalaryPerMonth(List<ReportDto> reportDtos){
@@ -37,7 +46,7 @@ public class AmountOfDays {
             return 0.0;
         }
         double totalHours = reportDtos.stream()
-                .mapToDouble(report -> report.getAmountOfHours().toSecondOfDay() / 3600.0) // convert to hours
+                .mapToDouble(report -> report.getAmountOfHours().toSecondOfDay() / 3600.0)
                 .sum();
 
         return Math.round(totalHours * reportDtos.get(0).getUser().getSalaryPerHour() * Math.pow(10, 2)) / Math.pow(10, 2);

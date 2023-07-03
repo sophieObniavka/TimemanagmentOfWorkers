@@ -44,4 +44,7 @@ public class SickLeave {
 
     @Column
     private String comment;
+
+    @Column
+    private byte[] receipt_certificate;
 }

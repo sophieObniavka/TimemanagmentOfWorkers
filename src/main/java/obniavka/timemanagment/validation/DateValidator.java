@@ -9,14 +9,12 @@ public class DateValidator implements ConstraintValidator<DateConstraint, LocalD
     public void initialize(DateConstraint constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
-
     @Override
     public boolean isValid(LocalDate birth, ConstraintValidatorContext context) {
         LocalDate now = LocalDate.now();
         if(birth==null){
             return true;
         }
-
         return (now.minusYears(18).isAfter(birth) || now.minusYears(18).equals(birth));
     }
 }

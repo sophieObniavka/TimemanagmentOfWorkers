@@ -26,9 +26,7 @@ import java.util.*;
 @Service
 public class UserService  implements UserDetailsService{
 
-
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     AmountOfDays amountOfDays = new AmountOfDays();
 
@@ -38,14 +36,6 @@ public class UserService  implements UserDetailsService{
     }
 
     UserMapper userMapper = Mappers.getMapper(UserMapper.class);
-    ReportMapper reportMapper = Mappers.getMapper(ReportMapper.class);
-
-    @Transactional
-    public void updatePassword(){
-
-        String res = bCryptPasswordEncoder.encode("sofiia");
-        userRepository.updateUserPassword(res, 4L);
-    }
 
     public UserDto findUserById(final Long userId){
         Optional<User> user = userRepository.findById(userId);

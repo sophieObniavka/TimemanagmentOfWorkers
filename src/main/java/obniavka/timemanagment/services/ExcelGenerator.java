@@ -26,7 +26,7 @@ public class ExcelGenerator {
     private XSSFSheet sheet;
 
     public ExcelGenerator(List <ReportDto> reports) {
-        labels = ResourceBundle.getBundle("i18n/labels", new Locale("uk"));
+        labels = ResourceBundle.getBundle("i18n/labels", new Locale("en"));
         this.reports = reports;
         workbook = new XSSFWorkbook();
     }

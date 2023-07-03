@@ -42,7 +42,7 @@
                             <img th:src="@{'data:image/**;charset=utf-8;base64,'+ ${v.user.convertedImage}}" alt="profile Image">
                             <a th:href="@{/admin/users/profile/{id}(id = ${v.user.id})}" class="user-link" th:text="''+ ${v.user.firstName} + ' '+ ${v.user.lastName} + ''"  ></a>
                         </td>
-                        <td th:field="${v.created}" th:text="${v.created}">
+                        <td th:field="${v.fullCreatedTime()}" th:text="${v.fullCreatedTime()}">
                         </td>
                         <td th:field="${v.begin}" th:text="${v.begin}" >
                         </td>

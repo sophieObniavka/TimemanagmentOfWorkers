@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="/styles/bootstrap.min.css">
 
-<head th:replace="fragments/header" th:object="${current}">
+<head th:replace="fragments/header" >
     <meta charset="UTF-8">
     <title>Report</title>
     <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
@@ -70,9 +70,9 @@
         <td class="text-left" th:text="#{${report.workDay.getMonth()}}" ></td>
 
 
-        <td class="text-left" th:text="${report.begin}" th:id="inputBegi + *{report.id}"></td>
-        <td class="text-left" th:text="${report.end}" th:id="inputEnd + *{report.id}"></td>
-        <td class="text-left" th:text="${report.pause}" th:id="inputPause + *{report.id}"></td>
+        <td class="text-left" th:text="${#temporals.format(report.begin, 'HH:mm')}" th:id="inputBegi + *{report.id}"></td>
+        <td class="text-left" th:text="${#temporals.format(report.end, 'HH:mm')}" th:id="inputEnd + *{report.id}"></td>
+        <td class="text-left" th:text="${#temporals.format(report.pause, 'HH:mm')}" th:id="inputPause + *{report.id}"></td>
 
 
         <td th:if="${report.task}" class="text-left" th:text="${report.task.name}" th:id="inputTask + *{report.id}"></td>
@@ -96,30 +96,54 @@
 </div>
 <h3 th:text="#{REPORT.TOTALSUM} + ' ' + ${total}" style="margin-left: 120px;margin-top: 10px; margin-bottom: 10px"></h3>
 
-<div id="toastContainer" class="position-fixed top-0 end-0 p-3">
-    <!-- Toast -->
-    <div class="toast" th:if="${showToast}">
-        <div class="toast-header">
-            <strong class="me-auto" th:text="#{SUCCESS}">Toast Title</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+<<div class="toast active" id="successToast">
+
+    <div class="toast-content">
+        <i class="fas fa-solid fa-check check"></i>
+
+        <div class="message">
+            <span class="text text-1" th:text="#{SUCCESS}"></span>
+            <span class="text text-2" th:text="#{SUCCESSFULLY.UPLOADED}"></span>
         </div>
-        <div class="toast-body" th:text="#{SUCCESSFULLY.UPLOADED}"></div>
     </div>
+    <i class="fa fa-times close" id="closeBtn"></i>
+
+    <!-- Remove 'active' class, this is just to show in Codepen thumbnail -->
+    <div class="progress active"></div>
 </div>
 
-<script src="/js/bootstrap.bundle.min.js"></script>
 <script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        var toastEl = document.querySelector('.toast');
-        var toast = new bootstrap.Toast(toastEl);
+    var isSuccess = /*[[${showToast}]]*/ false;
+    if (isSuccess) {
+        onBeforeOpen();
+        let toast = document.querySelector("#successToast");
+        let closeIcon = document.querySelector("#closeBtn");
+        let timer1, timer2;
+        let progress = document.querySelector(".progress");
+        toast.classList.add("show");
+        progress.classList.add("active");
 
-        toastEl.classList.add('bg-success', 'text-white');
+        timer1 = setTimeout(() => {
+            toast.classList.remove("show");
+        }, 9000);
 
-        toast.show();
-        // setTimeout(function() {
-        //     toast.hide();
-        // }, 10000);
-    });
+        timer2 = setTimeout(() => {
+            progress.classList.remove("active");
+        }, 9300);
+
+        closeIcon.addEventListener("click", () => {
+            toast.classList.remove("show");
+
+            setTimeout(() => {
+                progress.classList.remove("active");
+            }, 300);
+
+            clearTimeout(timer1);
+            clearTimeout(timer2);
+        });
+
+        isSuccess = false
+    }
 </script>
 </body>
 </html>

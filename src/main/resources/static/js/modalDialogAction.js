@@ -103,6 +103,7 @@ function closeUpload(){
     document.getElementById("upload").style.display = "none"
     document.getElementById("invoice").value = null;
 }
+
 function changeAssignment(getId, users){
     document.getElementById("assignmentModal").style.display = "block";
 

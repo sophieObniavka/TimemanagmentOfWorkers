@@ -48,14 +48,15 @@
                         <th  th:text="#{STATUS}"><span></span></th>
                         <th  th:text="#{COMMENTLEFT}"><span></span></th>
                         <th  th:text="#{CHECKER}"><span></span></th>
+                        <th  th:text="#{CERTIFICATE}"><span></span></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:if="${sickleaves.isEmpty()}" >
-                        <td colspan="9" th:text="#{NODATA}"></td>
+                        <td colspan="10" th:text="#{NODATA}"></td>
                     </tr>
                     <tr th:if="${!sickleaves.isEmpty()}" th:each="s : ${sickleaves}">
-                        <td th:field="${s.created.getDayOfMonth() + '/' + s.created.getMonthValue() + '/' + s.created.getYear() + ' ' + s.created.getHour() +':' + s.created.getMinute()}" th:text="${s.created}">
+                        <td th:text="${s.fullCreatedTime()}">
                         </td>
                         <td th:field="${s.begin}" th:text="${s.begin}" >
                         </td>
@@ -78,6 +79,15 @@
                         </td>
                         <td th:field="${s.checkedByUser}" th:text="${s.checkedByUser}">
                         </td>
+
+                        <td th:if="${s.certificate_url}" th:text="${s.end}">
+                        </td>
+                        <td th:unless="${s.certificate_url}" th:if="${s.confirmed}">
+                            <a th:text="#{ADD.CERTIFICATE}"  th:data-sickleave-id="${s.id}" onclick="uploadCertification(this.getAttribute('data-sickleave-id'))"></a>
+                            <div th:replace="fragments/certificate :: container"></div>
+                        </td>
+                        <td unless>
+                        </td>
                     </tr>
 
                     </tbody>
@@ -92,7 +102,33 @@
     <div  th:replace="fragments/Pagination::pagination('/sickleaves')"></div>
 </div>
 </div>
+<script>
+    var modal = $('#certficateDialog');
 
+    var span = $("#clsCertif");
+
+function uploadCertification(id) {
+
+    document.getElementById('inputCertificate').action = "/sickleave/certificate/"+id
+    modal.show();
+
+
+    span.on('click', function () {
+        document.getElementById('inputCertificate').action = null;
+        document.getElementById("cert").innerHTML = null
+        modal.fadeOut();
+    });
+}
+
+    $('body').bind('click', function(e){
+        if($(e.target).hasClass("modal")){
+            modal.fadeOut();
+        }
+    });
+
+
+
+</script>
 </body>
 
 </html>

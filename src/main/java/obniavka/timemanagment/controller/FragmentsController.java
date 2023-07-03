@@ -11,10 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -60,9 +60,15 @@ public class FragmentsController {
         return LocalDate.now().getYear() + "-" + String.format("%02d", LocalDate.now().getMonthValue());
     }
 
-    @GetMapping("/deadline-before-tomorrow")
-    public List<TaskDto> getTasksWithDeadlineBeforeTomorrow(@ModelAttribute("current") UserDto user) {
-        UserDto userDto = userService.findUserByEmail(user.getEmail());
-        return taskService.fetchAllTasksBetweenYesterdayAndTomorrow(userDto);
+    @ModelAttribute("tasksWithDeadline")
+    public List<TaskDto> undoneTasks(@ModelAttribute("current") UserDto user){
+        if (user != null) {
+            UserDto userDto = userService.findUserByEmail(user.getEmail());
+           // System.out.println(taskService.fetchAllTasksBetweenYesterdayAndTomorrow(userDto).size());
+            return taskService.fetchAllTasksBetweenYesterdayAndTomorrow(userDto);
+        }
+        return new ArrayList<>();
     }
+
+
 }

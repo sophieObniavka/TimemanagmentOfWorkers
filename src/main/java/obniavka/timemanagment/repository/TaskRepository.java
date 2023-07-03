@@ -32,5 +32,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Page<Task> findByUser(final User user, Pageable pageable);
 
-    List<Task> findByDeadlineBetweenAndUser(LocalDate yesterday, LocalDate tomorrow, User map);
+    @Query("SELECT t FROM Task t WHERE t.deadline BETWEEN ?1 AND ?2 AND t.user = ?3 AND (t.isDone IS null or t.isDone = false)")
+    List<Task> findByDeadlineBetweenAndUser(LocalDate yesterday, LocalDate tomorrow, User user);
 }

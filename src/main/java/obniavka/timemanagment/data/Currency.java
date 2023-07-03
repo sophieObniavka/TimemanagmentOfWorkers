@@ -1,7 +1,7 @@
 package obniavka.timemanagment.data;
 
 public enum Currency {
-    EURO("EUR", "cents"),
+    EURO("EURO", "cents"),
     USD("USD", "cents"),
     UAH("UAH", "kopecks"),
     GBP("GBP", "pennies"),

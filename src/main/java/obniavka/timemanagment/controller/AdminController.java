@@ -5,13 +5,9 @@ import com.lowagie.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
 import obniavka.timemanagment.domain.*;
 import obniavka.timemanagment.helper.AmountOfDays;
-import obniavka.timemanagment.helper.NumberToWordsConverter;
-import obniavka.timemanagment.helper.Transliteration;
 import obniavka.timemanagment.services.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +25,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.Principal;
-import java.text.DecimalFormat;
 import java.util.*;
 
 import static obniavka.timemanagment.utils.Constants.*;
@@ -116,6 +111,7 @@ public class AdminController {
 
     @PostMapping("/users")
     public String persistUser(@Valid @ModelAttribute("user") UserDto user, BindingResult bindingResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
+        model.addAttribute("origin", "/admin/users");
         if (!multipartFile.isEmpty()) {
             user.setImageUrl(multipartFile.getBytes());
         }
@@ -265,7 +261,7 @@ public class AdminController {
         model.addAttribute("editedTask", new TaskDto());
         model.addAttribute(USERS, userService.fetchAllUsersFromDb());
 
-        Page<TaskDto> tasks = taskService.fetchAllTasksFromDB(keyword, PageRequest.of(page.orElse(1) - 1, 10));
+        Page<TaskDto> tasks = taskService.fetchAllTasksFromDB(keyword, PageRequest.of(page.orElse(1) - 1, 7));
 
         model.addAttribute("taskChange", new TaskDto());
         paginationModel(model, TASKS, page,tasks, keyword);
@@ -354,6 +350,18 @@ public class AdminController {
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
         response.getOutputStream().write(receiptData);
+        response.getOutputStream().flush();
+    }
+
+    @GetMapping("/certificate/{id}")
+    public void downloadCertificate(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        SickLeaveDto sickLeaveDto = sickLeavesService.findSickLeaveById(id);
+        byte[] certificate = sickLeaveDto.getCertificate_url();
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=" + sickLeaveDto.getUser().getLastName()+"Certificate");
+
+        response.getOutputStream().write(certificate);
         response.getOutputStream().flush();
     }
 

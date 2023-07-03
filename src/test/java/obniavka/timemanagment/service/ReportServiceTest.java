@@ -12,6 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Optional;
 import static org.mockito.Mockito.*;
 
@@ -20,7 +23,6 @@ public class ReportServiceTest {
 
     @InjectMocks
     private ReportService reportService;
-
     @Mock
     private ReportRepository reportRepository;
 
@@ -31,28 +33,19 @@ public class ReportServiceTest {
     void setUp() {
         report = Report.builder()
                 .id(1L)
+                .workDay(LocalDate.of(2023, Month.JANUARY, 12))
                 .build();
         reportDto = ReportDto.builder()
                 .id(1L)
+                .workDay(LocalDate.of(2023, Month.JANUARY, 12))
                 .build();
-
     }
-
-
-//    @Test
-//    public void testDropReportFromDb() {
-//        reportService.dropReportFromDb(reportDto.getId());
-//
-//        verify(reportRepository, times(1)).deleteById(reportDto.getId());
-//    }
-
     @Test
     @DisplayName("Finds report by id")
     void findsProjectById() {
         when(reportRepository.findById(report.getId())).thenReturn(Optional.of(report));
-
         var result = reportService.findReportById(1L);
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
+        verify(reportRepository).findById(1L);
+        assertEquals(reportDto, result);
     }
 }

@@ -43,6 +43,7 @@
                         <th scope="col" th:text="#{VACATION.ATOWNEXPENSE}"><span></span></th>
                         <th  scope="col" th:text="#{STATUS}"><span></span></th>
                         <th  scope="col" th:text="#{CHECKER}"><span></span></th>
+                        <th  scope="col" th:text="#{CERTIFICATE}"><span></span></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,7 +56,7 @@
                             <a th:href="@{/admin/users/profile/{id}(id = ${s.user.id})}" class="user-link" th:text="''+ ${s.user.firstName} + ' '+ ${s.user.lastName} + ''"  ></a>
 
                         </td>
-                        <td th:text="${s.created.getDayOfMonth() + '/' + s.created.getMonthValue() + '/' + s.created.getYear() + ' ' + s.created.getHour() +':' + s.created.getMinute()}">
+                        <td th:text="${s.fullCreatedTime()}">
                         </td>
                         <td th:field="${s.begin}" th:text="${s.begin}" >
                         </td>
@@ -78,6 +79,13 @@
 
                         <td class="text-center">
                             <span class="label label-default" th:text="${s.checkedByUser}"></span>
+                        </td>
+                        <td th:if="${s.certificate_url}" class="text-center" >
+                            <a th:href="@{/admin/certificate/{id}(id=${s.id})}" th:text="${'Certification.' + s.user.lastName}"></a>
+                        </td>
+                        <td th:unless="${s.certificate_url}" th:if="${s.confirmed}">
+                        </td>
+                        <td unless>
                         </td>
                     </tr>
 

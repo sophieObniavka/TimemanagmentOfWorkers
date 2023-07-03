@@ -3,7 +3,7 @@
 <link th:href="@{/styles/login.css}" rel="stylesheet" />
 <head>
     <meta charset="ISO-8859-1">
-    <title>Registration and Login App</title>
+    <title>Timy</title>
 </head>
 <body>
 <form th:action="@{/doLogin}" method="post">
@@ -27,14 +27,13 @@
 
                 <input type="password" name="password" id="password" class="form-control">
             </label>
-        <td>Remember Me:</td>
+        <td th:text="#{REMEMBER}"></td>
         <td><input type="checkbox" name="remember-me" /></td>
             <div class="text-center">
                 <button class="submit" name="login-submit" id="login-submit"  value="Log In"  th:text="#{LOGIN.BUTTON}"></button>
             </div>
         <div th:if="${param.error}">
-            <div class="alert alert-danger">Invalid username or
-                password.</div>
+            <div class="alert alert-danger" th:text="#{INVALID.LOGIN}"></div>
         </div>
     </div>
 </form>

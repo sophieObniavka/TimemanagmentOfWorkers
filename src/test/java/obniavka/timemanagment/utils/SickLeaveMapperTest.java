@@ -38,6 +38,7 @@ public class SickLeaveMapperTest {
         sickLeaveDto.setCreated(LocalDateTime.now());
         sickLeaveDto.setDescription("I'm having a headache");
         sickLeaveDto.setCheckedByUser("User User");
+        sickLeaveDto.setCertificate_url(new byte[]{1,22,55});
 
         SickLeave sickLeave = sickLeaveMapper.map(sickLeaveDto);
 

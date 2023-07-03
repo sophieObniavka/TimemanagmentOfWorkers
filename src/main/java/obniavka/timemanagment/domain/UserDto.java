@@ -10,13 +10,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Builder(toBuilder = true)
 @Data
@@ -57,8 +58,7 @@ public class UserDto implements UserDetails {
     @NotEmpty(message = "{USER.SWIFTCODE.REQUIRED}")
     private String swiftCode;
 
-    @NotNull
-    @NotEmpty(message = "{USER.CURRENCY.REQUIRED}")
+    @NotNull(message = "{USER.CURRENCY.REQUIRED}")
     private Currency currency;
 
     @NotNull

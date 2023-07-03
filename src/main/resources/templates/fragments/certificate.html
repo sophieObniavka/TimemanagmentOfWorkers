@@ -1,0 +1,24 @@
+<div id="certficateDialog" class="modal" th:fragment="container" style="align-items: center; justify-content: center">
+    <div class="modal-content animate-top" style="margin-top: 200px;margin-left: 500px; width: 400px;">
+        <div class="modal-header" style="background-color: black">
+            <h5 class="modal-title" th:text="#{CERTIFICATE}" style="color: white"></h5>
+            <button type="button" class="close" id="clsCertif">
+                <span aria-hidden="true">x</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="inputCertificate" action="" class="mr-0" method="post" enctype="multipart/form-data">
+                <div class="col-md-10" style="margin-left: 15px">
+                    <ul  class="list-unstyled ml-0" >
+                        <input type="file" id="cert" name="certificate" required/>
+                    </ul>
+
+
+                </div>
+                <button  id="saveButton" style="margin-top: 30px; margin-left: 30px"><h3 th:text="#{REPORT.SAVE}"></h3></button>
+            </form>
+        </div>
+
+
+    </div>
+</div>

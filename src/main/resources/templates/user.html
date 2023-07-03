@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <link th:href="@{/styles/user.css}" rel="stylesheet" />
 <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 <script src="/webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
@@ -13,7 +13,7 @@
 
 <body>
 
-<form th:action="@{/admin/users}" th:object="${user}" method="post" enctype="multipart/form-data">
+<form th:action="@{${origin}}" th:object="${user}" method="post" enctype="multipart/form-data">
     <input th:type="hidden" id="img" type="file" th:field="*{imageUrl}"/>
 
     <script th:inline="javascript">function verifyPassword(errorMessage) {
@@ -84,7 +84,7 @@
                                 <input id="birth" class="form-control"  type="date" th:field="*{birth}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" >
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <label class="small mb-1" th:text = "#{USER.HIRED}"></label>
                                 <input id="hired" class="form-control"  type="date" th:field="*{hired}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('hired')}" th:errors="*{hired}" >
@@ -94,37 +94,37 @@
                                 <input id="phoneNumber" class="form-control"  type="tel" th:field="*{phoneNumber}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" >
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <label class="small mb-1" th:text = "#{USER.POSITION}"></label>
                                 <input id="position" class="form-control" type="text" th:field="*{position}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('position')}" th:errors="*{position}" >
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <label class="small mb-1" th:text = "#{USER.VACATIONS.AMOUNT}"></label>
                                 <input id="vacationDays" class="form-control" type="text" th:field="*{vacationDays}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('vacationDays')}" th:errors="*{vacationDays}" >
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <label class="small mb-1" th:text = "#{USER.SICKLEAVE.AMOUNT}"></label>
                                 <input id="sickleaveDays" class="form-control" type="text" th:field="*{sickleaveDays}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('sickleaveDays')}" th:errors="*{sickleaveDays}" >
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <label class="small mb-1" th:text = "#{USER.SALARYPERHOUR}"></label>
                                 <input id="salaryPerHour" class="form-control" type="text" th:field="*{salaryPerHour}">
                                 <p class="alert alert-danger" th:if="${#fields.hasErrors('salaryPerHour')}" th:errors="*{salaryPerHour}" >
                             </div>
 
-                            <select name="currency" id="currency"  th:field="*{currency}" style="height: 30px; margin-top: 25px">
+                            <select name="currency" id="currency"  th:field="*{currency}" style="height: 30px; margin-top: 25px" sec:authorize="hasRole('ROLE_ADMIN')">
                                 <option value="" disabled></option>
-                                <option th:each="cur : ${T(obniavka.timemanagment.data.ExpenseType).values()}"  th:value="${cur}" th:text="#{${cur}}"></option>
+                                <option th:each="cur : ${T(obniavka.timemanagment.data.Currency).values()}"  th:value="${cur}" th:text="#{${cur}}"></option>
                             </select>
-                            <p class="alert alert-danger" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}" >
+                            <p class="alert alert-danger" th:if="${#fields.hasErrors('currency')}" th:errors="*{currency}"sec:authorize="hasRole('ROLE_ADMIN')" >
 
                         </div>
-                        <label class="radio-label" th:text = "#{USER.ROLE}"></label>
+                        <label class="radio-label" th:text = "#{USER.ROLE}" sec:authorize="hasRole('ROLE_ADMIN')"></label>
                         <div class="form-radio" id="role" style="display: -webkit-flex;.form-radio { margin-bottom: 18px;}">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" th:value="ROLE_USER" th:field="*{role}">
@@ -246,7 +246,7 @@
                             </tr>
                         </div>
                         <!-- Save changes button-->
-                        <input  class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{/admin/users}"/>
+                        <input  class="btn btn-primary" type="submit" th:value="#{USER.SAVE}" th:href="@{${origin}}"/>
                     </form>
                 </div>
             </div>

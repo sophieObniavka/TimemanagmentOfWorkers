@@ -53,13 +53,11 @@ public class ReportController {
         model.addAttribute(REPORTNEW, new ReportDto());
         model.addAttribute(REPORTONCHANGE, new ReportDto());
         model.addAttribute(TASKS, userDto.getTasks());
-        model.addAttribute("successMessage", "Yaay");
         model.addAttribute("total", AmountOfDays.getSalaryPerMonth(reports));
         Object showToast = session.getAttribute("showToast");
-        if (showToast != null && (boolean) showToast) {
-            model.addAttribute("showToast", true);
-            session.setAttribute("showToast", false);
-        }
+        boolean showToastValue = (showToast != null && (boolean) showToast) ? true : false;
+        model.addAttribute("showToast", showToastValue);
+        session.setAttribute("showToast", false);
 
 
         return REPORT;
@@ -122,7 +120,7 @@ public class ReportController {
 
     @GetMapping("/export-to-excel/{date}")
     public void exportIntoExcelFile(HttpServletResponse response,HttpServletRequest request, @PathVariable("date") String selectedDate, @ModelAttribute("current") UserDto user) throws IOException {
-        Locale userLocale = request.getLocale();
+        Locale userLocale = Locale.US;
         Locale.setDefault(userLocale);
 
         UserDto userDto = userService.findUserByEmail(user.getEmail());

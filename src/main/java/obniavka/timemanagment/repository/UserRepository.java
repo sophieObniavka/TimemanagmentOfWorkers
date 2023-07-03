@@ -35,10 +35,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "upper(u.position) like upper(concat('%', :keyword, '%'))")
     Page<User> findUserByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    @Modifying
-    @Query("update User u set u.password = :password where u.id = :id")
-    void updateUserPassword(@Param(value = "password") String password, @Param(value = "id") Long id);
-
    @Transactional
     @Modifying
     @Query("update User u set u.assignments = :assignments where u.id = :userId")
